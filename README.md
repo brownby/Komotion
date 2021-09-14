@@ -1,2 +1,3 @@
-# AP10_PhysicsOfSports
+# AP10 - Physics of Sports
  
+Development repository for course under development
