@@ -12,9 +12,18 @@
   https://www.seas.harvard.edu/active-learning-labs
 */
 
+/* ! DEPENDENCIES ! */ 
+
 #include <Adafruit_BNO08x.h>
 #include <Adafruit_NeoPixel.h>
 #include <STM32SD.h>
+
+// STM32SD depends on FatFs
+// find JSON here: 
+// https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
+
+// also STM32CubeProgrammer
+// https://www.st.com/en/development-tools/stm32cubeprog.html
 
 #define BNO08X_RESET -1
 #define nPIN 8           // reference = STM32F405 feather pinout
