@@ -22,7 +22,7 @@
 // find JSON here: 
 // https://github.com/stm32duino/BoardManagerFiles/raw/master/package_stmicroelectronics_index.json
 
-// also STM32CubeProgrammer
+// also STM32CubeProgrammer is required for upload
 // https://www.st.com/en/development-tools/stm32cubeprog.html
 
 #define BNO08X_RESET -1
