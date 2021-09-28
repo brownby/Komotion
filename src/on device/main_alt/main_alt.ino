@@ -32,7 +32,7 @@
 #define uSeconds 1000000
 #define mSwitch A0       // slide switch to control state (standby or recording)
 #define hSwitch A1       // high side for switch
-#define cButton 5        // button to initiate calibration (?) in stanby // TODO
+#define cButton 5        // button to initiate calibration (?) in standby // TODO
 #define hButton 9        // high side for button
 
 #ifndef SD_DETECT_PIN
@@ -184,64 +184,53 @@ void loop() {
 
     switch (sensorValue.sensorId) {
       case SH2_ACCELEROMETER:
-        sprintf(dataBuffer, "a,%4.2f,%4.2f,%4.2f,%u", sensorValue.un.accelerometer.x, sensorValue.un.accelerometer.y, sensorValue.un.accelerometer.z, (micros() - start_time));
+        sprintf(dataBuffer, "a,%4.2f,%4.2f,%4.2f,%u", 
+                sensorValue.un.accelerometer.x, sensorValue.un.accelerometer.y, 
+                sensorValue.un.accelerometer.z, (micros() - start_time));
         dataFile.println(dataBuffer);  
         break;
       case SH2_GYROSCOPE_CALIBRATED:
-        sprintf(dataBuffer, "g,%4.2f,%4.2f,%4.2f,%u", sensorValue.un.gyroscope.x, sensorValue.un.gyroscope.y, sensorValue.un.gyroscope.z, (micros() - start_time));
+        sprintf(dataBuffer, "g,%4.2f,%4.2f,%4.2f,%u", 
+                sensorValue.un.gyroscope.x, sensorValue.un.gyroscope.y, 
+                sensorValue.un.gyroscope.z, (micros() - start_time));
         dataFile.println(dataBuffer);  
-        break; /* // disabled begin
+        break;
       case SH2_MAGNETIC_FIELD_CALIBRATED:
-        sprintf(dataBuffer, "m,%4.2f,%4.2f,%4.2f,%u", sensorValue.un.magneticField.x, sensorValue.un.magneticField.y, sensorValue.un.magneticField.z, (micros() - start_time));
+        sprintf(dataBuffer, "m,%4.2f,%4.2f,%4.2f,%u", 
+                sensorValue.un.magneticField.x, sensorValue.un.magneticField.y, 
+                sensorValue.un.magneticField.z, (micros() - start_time));
         dataFile.println(dataBuffer);  
         break;
       case SH2_LINEAR_ACCELERATION:
-        Serial.print("Linear Acceration - x: ");
-        Serial.print(sensorValue.un.linearAcceleration.x);
-        Serial.print(" y: ");
-        Serial.print(sensorValue.un.linearAcceleration.y);
-        Serial.print(" z: ");
-        Serial.println(sensorValue.un.linearAcceleration.z);
-        dataFile.flush();
+        sprintf(dataBuffer, "la,%4.2f,%4.2f,%4.2f,%u", 
+                sensorValue.un.linearAcceleration.x, sensorValue.un.linearAcceleration.y, 
+                sensorValue.un.linearAcceleration.z, (micros() - start_time));
+        dataFile.println(dataBuffer);  
         break;
       case SH2_ROTATION_VECTOR:
-        Serial.print("Rotation Vector - r: ");
-        Serial.print(sensorValue.un.rotationVector.real);
-        Serial.print(" i: ");
-        Serial.print(sensorValue.un.rotationVector.i);
-        Serial.print(" j: ");
-        Serial.print(sensorValue.un.rotationVector.j);
-        Serial.print(" k: ");
-        Serial.println(sensorValue.un.rotationVector.k);
-        dataFile.flush();
+        sprintf(dataBuffer, "rv,%4.2f,%4.2f,%4.2f,%4.2f,%u", 
+                sensorValue.un.rotationVector.real, sensorValue.un.rotationVector.i, 
+                sensorValue.un.rotationVector.j, sensorValue.un.rotationVector.k, (micros() - start_time));
+        dataFile.println(dataBuffer);  
         break;
       case SH2_RAW_ACCELEROMETER:
-        Serial.print("Raw Accelerometer - x: ");
-        Serial.print(sensorValue.un.rawAccelerometer.x);
-        Serial.print(" y: ");
-        Serial.print(sensorValue.un.rawAccelerometer.y);
-        Serial.print(" z: ");
-        Serial.println(sensorValue.un.rawAccelerometer.z);
-        dataFile.flush();
+        sprintf(dataBuffer, "ra,%4.2d,%4.2d,%4.2d,%u", 
+                sensorValue.un.rawAccelerometer.x, sensorValue.un.rawAccelerometer.y, 
+                sensorValue.un.rawAccelerometer.z, (micros() - start_time));
+        dataFile.println(dataBuffer);  
         break;
       case SH2_RAW_GYROSCOPE:
-        Serial.print("Raw Gyro - x: ");
-        Serial.print(sensorValue.un.rawGyroscope.x);
-        Serial.print(" y: ");
-        Serial.print(sensorValue.un.rawGyroscope.y);
-        Serial.print(" z: ");
-        Serial.println(sensorValue.un.rawGyroscope.z);
-        dataFile.flush();
+        sprintf(dataBuffer, "rg,%4.2d,%4.2d,%4.2d,%u", 
+                sensorValue.un.rawGyroscope.x, sensorValue.un.rawGyroscope.y, 
+                sensorValue.un.rawGyroscope.z, (micros() - start_time));
+        dataFile.println(dataBuffer);  
         break;
       case SH2_RAW_MAGNETOMETER:
-        Serial.print("Raw Magnetic Field - x: ");
-        Serial.print(sensorValue.un.rawMagnetometer.x);
-        Serial.print(" y: ");
-        Serial.print(sensorValue.un.rawMagnetometer.y);
-        Serial.print(" z: ");
-        Serial.println(sensorValue.un.rawMagnetometer.z);
-        dataFile.flush();
-        break; */ // disabled end
+        sprintf(dataBuffer, "rg,%4.2d,%4.2d,%4.2d,%u", 
+                sensorValue.un.rawMagnetometer.x, sensorValue.un.rawMagnetometer.y, 
+                sensorValue.un.rawMagnetometer.z, (micros() - start_time));
+        dataFile.println(dataBuffer);  
+        break;
       default:
         break;
     }
