@@ -2,7 +2,7 @@
   BNO08x data logger
   for STM32F405 feather
 
-  Writes requested reports to a text file
+  Writes requested reports to a text file (csv)
   and allows for configuration of requested sample rate
 
   modified 28 September 2021
@@ -18,7 +18,7 @@
 
 #define BNO08X_RESET -1
 #define nPIN 8           // reference = STM32F405 feather pinout
-#define nPIX 1           // ''
+#define nPIX 1           // number of neopixels
 #define sRate 100        // requested rate, in Hz
 #define uSeconds 1000000
 #define mSwitch A0       // slide switch to control state (standby or recording)
@@ -35,7 +35,6 @@ Adafruit_NeoPixel pixels(nPIX,nPIN, NEO_GRB + NEO_KHZ800);
 sh2_SensorValue_t sensorValue;
 
 char dataBuffer[40];
-char dim[4] = {'x','y','z'};
 
 bool recording = false;
 unsigned long start_time;
