@@ -101,7 +101,7 @@ BNO_REPORT_GYRO_INTEGRATED_ROTATION_VECTOR = const(0x2A)
 # CALIBRATION
 # RAW ACCEL, MAG, GYRO # Sfe says each needs the non-raw enabled to work
 
-_DEFAULT_REPORT_INTERVAL = const(50000)  # in microseconds = 50ms
+_DEFAULT_REPORT_INTERVAL = const(10000)  # in microseconds = 10ms or 100 Hz
 _QUAT_READ_TIMEOUT = 0.500  # timeout in seconds
 _PACKET_READ_TIMEOUT = 2.000  # timeout in seconds
 _FEATURE_ENABLE_TIMEOUT = 2.0
