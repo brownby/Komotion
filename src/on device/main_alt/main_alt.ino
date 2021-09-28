@@ -95,11 +95,10 @@ void setReports(void) {
   }
   if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED,uSeconds/sRate)) {
     Serial.println("Could not enable gyroscope (!)");
-  } /*
+  } /* // disabled begin
   if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED,uSeconds/sRate)) {
     Serial.println("Could not enable magnetic field calibrated (!)");
   }
-  /* // disabled begin
   if (!bno08x.enableReport(SH2_LINEAR_ACCELERATION)) {
     Serial.println("Could not enable linear acceleration");
   }
@@ -164,60 +163,60 @@ void loop() {
       case SH2_GYROSCOPE_CALIBRATED:
         sprintf(dataBuffer, "g,%4.2f,%4.2f,%4.2f,%u", sensorValue.un.gyroscope.x, sensorValue.un.gyroscope.y, sensorValue.un.gyroscope.z, (micros() - start_time));
         dataFile.println(dataBuffer);  
-        break;
+        break; /* // disabled begin
       case SH2_MAGNETIC_FIELD_CALIBRATED:
         sprintf(dataBuffer, "m,%4.2f,%4.2f,%4.2f,%u", sensorValue.un.magneticField.x, sensorValue.un.magneticField.y, sensorValue.un.magneticField.z, (micros() - start_time));
         dataFile.println(dataBuffer);  
         break;
+      case SH2_LINEAR_ACCELERATION:
+        Serial.print("Linear Acceration - x: ");
+        Serial.print(sensorValue.un.linearAcceleration.x);
+        Serial.print(" y: ");
+        Serial.print(sensorValue.un.linearAcceleration.y);
+        Serial.print(" z: ");
+        Serial.println(sensorValue.un.linearAcceleration.z);
+        dataFile.flush();
+        break;
+      case SH2_ROTATION_VECTOR:
+        Serial.print("Rotation Vector - r: ");
+        Serial.print(sensorValue.un.rotationVector.real);
+        Serial.print(" i: ");
+        Serial.print(sensorValue.un.rotationVector.i);
+        Serial.print(" j: ");
+        Serial.print(sensorValue.un.rotationVector.j);
+        Serial.print(" k: ");
+        Serial.println(sensorValue.un.rotationVector.k);
+        dataFile.flush();
+        break;
+      case SH2_RAW_ACCELEROMETER:
+        Serial.print("Raw Accelerometer - x: ");
+        Serial.print(sensorValue.un.rawAccelerometer.x);
+        Serial.print(" y: ");
+        Serial.print(sensorValue.un.rawAccelerometer.y);
+        Serial.print(" z: ");
+        Serial.println(sensorValue.un.rawAccelerometer.z);
+        dataFile.flush();
+        break;
+      case SH2_RAW_GYROSCOPE:
+        Serial.print("Raw Gyro - x: ");
+        Serial.print(sensorValue.un.rawGyroscope.x);
+        Serial.print(" y: ");
+        Serial.print(sensorValue.un.rawGyroscope.y);
+        Serial.print(" z: ");
+        Serial.println(sensorValue.un.rawGyroscope.z);
+        dataFile.flush();
+        break;
+      case SH2_RAW_MAGNETOMETER:
+        Serial.print("Raw Magnetic Field - x: ");
+        Serial.print(sensorValue.un.rawMagnetometer.x);
+        Serial.print(" y: ");
+        Serial.print(sensorValue.un.rawMagnetometer.y);
+        Serial.print(" z: ");
+        Serial.println(sensorValue.un.rawMagnetometer.z);
+        dataFile.flush();
+        break; */ // disabled end
       default:
         break;
-      // case SH2_LINEAR_ACCELERATION:
-      //   Serial.print("Linear Acceration - x: ");
-      //   Serial.print(sensorValue.un.linearAcceleration.x);
-      //   Serial.print(" y: ");
-      //   Serial.print(sensorValue.un.linearAcceleration.y);
-      //   Serial.print(" z: ");
-      //   Serial.println(sensorValue.un.linearAcceleration.z);
-      //   dataFile.flush();
-      //   break;
-      // case SH2_ROTATION_VECTOR:
-      //   Serial.print("Rotation Vector - r: ");
-      //   Serial.print(sensorValue.un.rotationVector.real);
-      //   Serial.print(" i: ");
-      //   Serial.print(sensorValue.un.rotationVector.i);
-      //   Serial.print(" j: ");
-      //   Serial.print(sensorValue.un.rotationVector.j);
-      //   Serial.print(" k: ");
-      //   Serial.println(sensorValue.un.rotationVector.k);
-      //   dataFile.flush();
-      //   break;
-      // case SH2_RAW_ACCELEROMETER:
-      //   Serial.print("Raw Accelerometer - x: ");
-      //   Serial.print(sensorValue.un.rawAccelerometer.x);
-      //   Serial.print(" y: ");
-      //   Serial.print(sensorValue.un.rawAccelerometer.y);
-      //   Serial.print(" z: ");
-      //   Serial.println(sensorValue.un.rawAccelerometer.z);
-      //   dataFile.flush();
-      //   break;
-      // case SH2_RAW_GYROSCOPE:
-      //   Serial.print("Raw Gyro - x: ");
-      //   Serial.print(sensorValue.un.rawGyroscope.x);
-      //   Serial.print(" y: ");
-      //   Serial.print(sensorValue.un.rawGyroscope.y);
-      //   Serial.print(" z: ");
-      //   Serial.println(sensorValue.un.rawGyroscope.z);
-      //   dataFile.flush();
-      //   break;
-      // case SH2_RAW_MAGNETOMETER:
-      //   Serial.print("Raw Magnetic Field - x: ");
-      //   Serial.print(sensorValue.un.rawMagnetometer.x);
-      //   Serial.print(" y: ");
-      //   Serial.print(sensorValue.un.rawMagnetometer.y);
-      //   Serial.print(" z: ");
-      //   Serial.println(sensorValue.un.rawMagnetometer.z);
-      //   dataFile.flush();
-      //   break;
     }
   }
   else{
