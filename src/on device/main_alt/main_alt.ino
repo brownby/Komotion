@@ -1,14 +1,30 @@
+/*
+  BNO08x data logger
+  for STM32F405 feather
+
+  Writes requested reports to a text file
+  and allows for configuration of requested sample rate
+
+  modified 28 September 2021
+  by J. Evan Smith
+
+  Active Learning Labs, Electrical Engineering
+  https://www.seas.harvard.edu/active-learning-labs
+*/
+
 #include <Adafruit_BNO08x.h>
 #include <Adafruit_NeoPixel.h>
 #include <STM32SD.h>
 
 #define BNO08X_RESET -1
-#define nPIN 8 // STM32F405 feather
-#define nPIX 1 // ''
-#define sRate 100 // requested rate, in Hz
+#define nPIN 8           // reference = STM32F405 feather pinout
+#define nPIX 1           // ''
+#define sRate 100        // requested rate, in Hz
 #define uSeconds 1000000
-#define mSwitch A0
-#define hSwitch A1
+#define mSwitch A0       // slide switch to control state (standby or recording)
+#define hSwitch A1       // high side for switch
+#define cButton 5        // button to initiate calibration (?) in stanby // TODO
+#define hButton 9        // high side for button
 
 #ifndef SD_DETECT_PIN
 #define SD_DETECT_PIN SD_DETECT_NONE
@@ -56,9 +72,12 @@ void setup(void) {
 
   pinMode(mSwitch,INPUT_PULLUP);
   pinMode(hSwitch,INPUT_PULLUP);
+  pinMode(cButton,INPUT_PULLUP);
+  pinMode(hButton,INPUT_PULLUP);
   pinMode(LED_BUILTIN,OUTPUT);
 
   digitalWrite(hSwitch,HIGH);
+  digitalWrite(hButton,HIGH);
   digitalWrite(LED_BUILTIN,HIGH);
 
   bnoDetails();
