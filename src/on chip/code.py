@@ -1,3 +1,17 @@
+"""
+  BNO08x data logger
+  for STM32F405 feather
+
+  Writes requested reports to a text file (csv)
+  and allows for configuration of requested sample rate
+
+  modified 28 September 2021
+  by J. Evan Smith
+  
+  Active Learning Labs, Electrical Engineering
+  https://www.seas.harvard.edu/active-learning-labs
+"""
+
 import time
 import board
 import busio
