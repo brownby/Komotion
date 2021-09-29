@@ -20,10 +20,13 @@ for indy, num in enumerate(data_raw):
         if freq_tmp != float("inf"):
             freq[indy] = 1/(data_raw[indy+1]-data_raw[indy])
         else:
-            freq[indy] = 100
+            freq[indy] = 2000
+
+print(np.mean(freq))
 
 N = len(lines)
 bins = 50
-
-plt.hist(freq, bins)
+plt.hlines(100, 0, 3000);
+plt.plot(freq)
+#plt.hist(freq, bins)
 plt.show()
