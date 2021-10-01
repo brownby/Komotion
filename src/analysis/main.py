@@ -7,7 +7,7 @@ plt.style.use('dark_background')
 dimensions = 9  # number of axes
 window_size, poly_order = 41, 3
 
-with open('data.txt') as f:
+with open('data_005.txt') as f:
     lines = f.readlines()
     data_raw = np.zeros((len(lines), dimensions+1))
     for indx, line in enumerate(lines):
