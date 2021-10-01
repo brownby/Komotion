@@ -12,6 +12,7 @@
    https://www.seas.harvard.edu/active-learning-labs
  """
 
+import os
 import time
 import board
 import busio
@@ -36,6 +37,7 @@ pixel.show()
 
 led = digitalio.DigitalInOut(board.D13) # red LED
 led.direction = digitalio.Direction.OUTPUT
+led.value = False
 
 print_d("Initializing SD card ...",debug)
 sdCard = sdioio.SDCard(
@@ -46,11 +48,20 @@ sdCard = sdioio.SDCard(
 
 vfs = storage.VfsFat(sdCard)
 storage.mount(vfs, "/sd")
+files = os.listdir("/sd")
+
+highest = 0
+
+for file in files:
+    for word in file.split("_"):
+        for num in word.split("."):
+            if num.isdigit() and int(num)>highest:
+                highest = int(num)
 
 led.value = True
-tic = time.monotonic()
 
-while (time.monotonic()-tic<5):
+tic = time.monotonic()
+while (time.monotonic()-tic<2):
     if supervisor.runtime.serial_bytes_available:
         value = input()
         if value == "d":
@@ -108,7 +119,7 @@ while True:
             print_d("Starting recording ...", debug)
             initial_time = time.monotonic()
         try:
-            with open("/sd/data_000.txt", "a") as f:
+            with open("/sd/data_{:03d}.txt".format(highest+1), "a") as f:
                 while switch.value == False:
 
                     """
@@ -143,7 +154,7 @@ while True:
             recording = not recording # toggle off
             pixel[0] = (0,0,5) # blue, "thinking" state
             f.close()
-            time.sleep(1) # time for f.close
+            time.sleep(2) # time for f.close
             pixel[0] = (0,5,0) # green, standby
         if not button.value:
             pixel[0] = (0,0,5) # blue
