@@ -511,6 +511,8 @@ class BNO08X:  # pylint: disable=too-many-instance-attributes, too-many-public-m
         self._dcd_saved_at = -1
         self._me_calibration_started_at = -1
         self._calibration_complete = False
+        self._accelerometer_accuracy = 0
+        self._gyroscope_accuracy = 0
         self._magnetometer_accuracy = 0
         self._wait_for_initialize = True
         self._init_complete = False
@@ -745,7 +747,8 @@ class BNO08X:  # pylint: disable=too-many-instance-attributes, too-many-public-m
                 0,  # reserved
             ]
         )
-        return self._magnetometer_accuracy
+        return self._magnetometer_accuracy #[self._accelerometer_accuracy, self._gyroscope_accuracy, self._magnetometer_accuracy]
+
 
     def _send_me_command(self, subcommand_params):
 
@@ -940,6 +943,10 @@ class BNO08X:  # pylint: disable=too-many-instance-attributes, too-many-public-m
             self._readings[BNO_REPORT_ACTIVITY_CLASSIFIER] = activity_classification
             return
         sensor_data, accuracy = _parse_sensor_report_data(report_bytes)
+        if report_id == BNO_REPORT_ACCELEROMETER:
+            self._accelerometer_accuracy_accuracy = accuracy
+        if report_id == BNO_REPORT_GYROSCOPE:
+            self._gyroscope_accuracy_accuracy = accuracy
         if report_id == BNO_REPORT_MAGNETOMETER:
             self._magnetometer_accuracy = accuracy
         # TODO: FIXME; Sensor reports are batched in a LIFO which means that multiple reports
