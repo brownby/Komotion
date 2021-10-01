@@ -26,6 +26,7 @@ from adafruit_bno08x.i2c import BNO08X_I2C
 
 debug = False # toggle to enable print statements
 recording = False # initialize system state bool
+calibrating = False # initialize system state bool
 
 def print_d(str_input,d_bool):
     if d_bool:
@@ -104,9 +105,9 @@ bno.enable_feature(adafruit_bno08x.BNO_REPORT_ACCELEROMETER)
 #bno.enable_feature(adafruit_bno08x.BNO_REPORT_LINEAR_ACCELERATION)
 #bno.enable_feature(adafruit_bno08x.BNO_REPORT_RAW_GYROSCOPE)
 bno.enable_feature(adafruit_bno08x.BNO_REPORT_GYROSCOPE)
-#bno.enable_feature(adafruit_bno08x.BNO_REPORT_MAGNETOMETER)
+#bno.enable_feature(adafruit_bno08x.BNO_REPORT_MAGNETOMETER)        # enable this for calibration
 #bno.enable_feature(adafruit_bno08x.BNO_REPORT_RAW_MAGNETOMETER)
-#bno.enable_feature(adafruit_bno08x.BNO_REPORT_ROTATION_VECTOR)
+#bno.enable_feature(adafruit_bno08x.BNO_REPORT_ROTATION_VECTOR)     # enable this for calibration
 
 print_d("Entering standby state ...",debug)
 pixel[0] = (0,5,0) # green, standby state
@@ -149,6 +150,7 @@ while True:
 
         except OSError as e:
             pixel[0] = (0,0,100) # other error, likely read-only
+
     else:
         if recording:
             recording = not recording # toggle off
@@ -157,12 +159,21 @@ while True:
             time.sleep(2) # time for f.close
             pixel[0] = (0,5,0) # green, standby
         if not button.value:
+            calibrating = not calibrating
             pixel[0] = (0,0,5) # blue
-            print("Calibrating")
+            print_d("Starting calibration ...",debug)
             bno.begin_calibration()
-            print(bno.calibration_status)
-            time.sleep(1)
-            #bno.save_calibration_data()
+            while calibrating:
+                if bno.calibration_status == 0:
+                    pixel[0] = (50,25,0)
+                if bno.calibration_status == 1:
+                    pixel[0] = (50,50,0)
+                if bno.calibration_status == 2:
+                    pixel[0] = (25,50,0)
+                if bno.calibration_status == 3:
+                    pixel[0] = (0,26,0)
+                    break
+                time.sleep(0.5)
+            bno.save_calibration_data()
+            print_d("Calibration finished ...",debug)
             pixel[0] = (0,5,0)
-
-
