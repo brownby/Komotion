@@ -1,0 +1,11 @@
+Operating System:
+-----------------
+- OS X Yosemite 10.10.5
+- OS X El Capitan 10.11.x
+- macOS Sierra 10.12.x
+- macOS High Sierra 10.13.x
+- macOS Mojave 10.14.x
+- macOS Catalina 10.15.x
+- macOS Big Sur 11.0.x
+
+CoolTerm for Mac is a portable application and can be installed anywhere on your system. 
