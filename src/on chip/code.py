@@ -154,6 +154,7 @@ while True:
     else:
         if recording:
             recording = not recording # toggle off
+            highest = highest + 1
             pixel[0] = (0,0,5) # blue, "thinking" state
             f.close()
             time.sleep(2) # time for f.close
