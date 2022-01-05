@@ -15,8 +15,8 @@
 /* ! DEPENDENCIES ! */ 
 
 #include <Adafruit_BNO08x.h>
-#include <Adafruit_NeoPixel.h>
-#include <STM32SD.h>
+//#include <Adafruit_NeoPixel.h>
+//#include <STM32SD.h>
 
 // STM32SD depends on FatFs
 // find JSON here: 
@@ -26,8 +26,8 @@
 // https://www.st.com/en/development-tools/stm32cubeprog.html
 
 #define BNO08X_RESET -1
-#define nPIN 8           // reference = STM32F405 feather pinout
-#define nPIX 1           // number of neopixels
+//#define nPIN 8           // reference = STM32F405 feather pinout
+//#define nPIX 1           // number of neopixels
 #define sRate 100        // requested rate, in Hz
 #define uSeconds 1000000
 #define mSwitch A0       // slide switch to control state (standby or recording)
@@ -40,7 +40,7 @@
 #endif
 
 Adafruit_BNO08x bno08x(BNO08X_RESET);
-Adafruit_NeoPixel pixels(nPIX,nPIN, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel pixels(nPIX,nPIN, NEO_GRB + NEO_KHZ800);
 sh2_SensorValue_t sensorValue;
 
 char dataBuffer[40];
@@ -53,27 +53,27 @@ File dataFile;
 void setup(void) {
   Serial.begin(115200);
   // while(!Serial){delay(10);} // add or remove comment here to deploy or debug, respectively
-  pixels.begin(); pixels.clear();
-  pixels.setPixelColor(0, pixels.Color(0, 50, 0)); 
-  pixels.show();  
+//  pixels.begin(); pixels.clear();
+//  pixels.setPixelColor(0, pixels.Color(0, 50, 0)); 
+//  pixels.show();  
 
   if (!bno08x.begin_I2C()) {
-    pixels.clear();
-    pixels.setPixelColor(0, pixels.Color(50, 20, 0)); pixels.show();  
+//    pixels.clear();
+//    pixels.setPixelColor(0, pixels.Color(50, 20, 0)); pixels.show();  
     Serial.println("Failed to find BNO08x chip (!)");
     while (!bno08x.begin_I2C()) {
       Serial.println("Trying again ... ");
       delay(250);
     }
   }
-  pixels.clear();
-  pixels.setPixelColor(0, pixels.Color(0, 50, 0)); pixels.show();  
+//  pixels.clear();
+//  pixels.setPixelColor(0, pixels.Color(0, 50, 0)); pixels.show();  
   Serial.println("BNO08x found (+)");
 
   Serial.println("Initializing SD card ... ");
   while (!SD.begin(SD_DETECT_PIN)){
-    pixels.clear();
-    pixels.setPixelColor(0, pixels.Color(50, 20, 0)); pixels.show();  
+//    pixels.clear();
+//    pixels.setPixelColor(0, pixels.Color(50, 20, 0)); pixels.show();  
     delay(10);
   }
   Serial.println("SD card initialized (+)");
@@ -94,8 +94,8 @@ void setup(void) {
   Serial.print("Sample rate configured to: "); // requested, will vary
   Serial.print(sRate);
   Serial.println(" Hz"); 
-  pixels.clear();
-  pixels.setPixelColor(0, pixels.Color(0, 50, 0)); pixels.show();  
+//  pixels.clear();
+//  pixels.setPixelColor(0, pixels.Color(0, 50, 0)); pixels.show();  
   delay(100);
   digitalWrite(LED_BUILTIN,LOW);
 }
@@ -175,8 +175,8 @@ void loop() {
       recording = !recording;
       dataFile = SD.open("datalog.txt", FILE_WRITE);
       Serial.println("Recording (!)");
-      pixels.clear();
-      pixels.setPixelColor(0, pixels.Color(50, 0, 0)); pixels.show();  
+//      pixels.clear();
+//      pixels.setPixelColor(0, pixels.Color(50, 0, 0)); pixels.show();  
       start_time = micros();
     }
     
@@ -240,8 +240,8 @@ void loop() {
       recording = !recording;
       dataFile.close();
       Serial.println("In standby ...");
-      pixels.clear();
-      pixels.setPixelColor(0, pixels.Color(0, 50, 0)); pixels.show();  
+//      pixels.clear();
+//      pixels.setPixelColor(0, pixels.Color(0, 50, 0)); pixels.show();  
     }
   }
 }
