@@ -8,7 +8,7 @@ gi = 0
 mi = 0
 ri = 0
 
-with open('data_new_spi.txt') as f:
+with open('data05.csv') as f:
     lines = f.readlines()
     time = np.zeros((len(lines), 1))
     data = np.zeros((len(lines), 5, 4))
