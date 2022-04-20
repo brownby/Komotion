@@ -1,8 +1,9 @@
+from ctypes import sizeof
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a200_gsweep.csv'
+fileName = 'data_a200_g200.csv'
 
 # sweep parameters
 sr_start = 10
@@ -49,10 +50,10 @@ i0 = 0
 run = 0
 flag = 1
 for i, t in enumerate(a[:, 3]):
-    if t < 0.1:
+    if t < 0.2:
         i0 = i
         flag = 1
-    if 5 - t < 0.1 and flag:
+    if 5 - t < 0.2 and flag:
         regression = linregress(a[i0:i, 3], list(range(i0, i)))
         a_sr[run] = regression.slope
         run += 1
@@ -63,10 +64,10 @@ i0 = 0
 run = 0
 flag = 1
 for i, t in enumerate(g[:, 3]):
-    if t < 0.1:
+    if t < 0.2:
         i0 = i
         flag = 1
-    if 5 - t < 0.1 and flag:
+    if 5 - t < 0.2 and flag:
         regression = linregress(g[i0:i, 3], list(range(i0, i)))
         g_sr[run] = regression.slope
         run += 1

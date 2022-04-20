@@ -105,10 +105,10 @@ void bnoDetails(void) {
 }
 
 void setReports(void) {
-  if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/sr)) {
+  if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/200)) {
     Serial.println("could not enable accelerometer (!)");
   } 
-  if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/sr)) {
+  if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/200)) {
     Serial.println("could not enable accelerometer (!)");
   } 
 }
@@ -124,7 +124,7 @@ void loop() {
     if ((micros()-start_time)/us > 5){
       sr = sr + 10;
       Serial.println(sr);
-      bno08x.hardwareReset();
+//      bno08x.hardwareReset();
       delay(1000);
       start_time = micros();
     }
