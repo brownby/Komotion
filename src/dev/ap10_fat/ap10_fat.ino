@@ -16,7 +16,7 @@
 #include <Adafruit_BNO08x.h>
 
 #define recon A0
-#define sr 100       
+#define sr 200       
 #define us 1000000.0
 #define BNO08X_CS 10
 #define BNO08X_INT 9
@@ -110,16 +110,16 @@ void bnoDetails(void) {
 
 void setReports(void) {
   Serial.println("setting desired reports ... ");
-  if (!bno08x.enableReport(SH2_ACCELEROMETER)) {
+  if (!bno08x.enableReport(SH2_RAW_ACCELEROMETER, us/200)) {
     Serial.println("could not enable accelerometer (!)");
   } 
-  if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED)) {
+  if (!bno08x.enableReport(SH2_RAW_GYROSCOPE, us/300)) {
     Serial.println("Could not enable gyroscope (!)");
   } 
-  if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED)) {
+  if (!bno08x.enableReport(SH2_RAW_MAGNETOMETER, us/100)) {
     Serial.println("Could not enable magnetic field calibrated (!)");
   }
-  if (!bno08x.enableReport(SH2_ROTATION_VECTOR)) {
+  if (!bno08x.enableReport(SH2_ROTATION_VECTOR, us/300)) {
     Serial.println("Could not enable rotation vector");
   }
   Serial.println("reports set");
@@ -148,38 +148,38 @@ void loop() {
     if (!bno08x.getSensorEvent(&sensorValue)) { return; }
     //
     switch (sensorValue.sensorId) {
-      case SH2_ACCELEROMETER:
+      case SH2_RAW_ACCELEROMETER:
         //tic = micros();
         dataString += "a,";
-        dataString += String(sensorValue.un.accelerometer.x);
+        dataString += String(sensorValue.un.rawAccelerometer.x);
         dataString += ",";
-        dataString += String(sensorValue.un.accelerometer.y);
+        dataString += String(sensorValue.un.rawAccelerometer.y);
         dataString += ",";
-        dataString += String(sensorValue.un.accelerometer.z);
+        dataString += String(sensorValue.un.rawAccelerometer.z);
         dataString += ",";
         dataString += String((micros()-start_time)/us,3);
         //tic = micros();
         //Serial.println(micros()-tic);
         file.println(dataString);
         break;
-      case SH2_GYROSCOPE_CALIBRATED:
+      case SH2_RAW_GYROSCOPE:
         dataString += "g,";
-        dataString += String(sensorValue.un.gyroscope.x);
+        dataString += String(sensorValue.un.rawGyroscope.x);
         dataString += ",";
-        dataString += String(sensorValue.un.gyroscope.y);
+        dataString += String(sensorValue.un.rawGyroscope.y);
         dataString += ",";
-        dataString += String(sensorValue.un.gyroscope.z);
+        dataString += String(sensorValue.un.rawGyroscope.z);
         dataString += ",";
         dataString += String((micros()-start_time)/us,3);
         file.println(dataString);
         break;
-      case SH2_MAGNETIC_FIELD_CALIBRATED:
+      case SH2_RAW_MAGNETOMETER:
         dataString += "m,";
-        dataString += String(sensorValue.un.magneticField.x);
+        dataString += String(sensorValue.un.rawMagnetometer.x);
         dataString += ",";
-        dataString += String(sensorValue.un.magneticField.y);
+        dataString += String(sensorValue.un.rawMagnetometer.y);
         dataString += ",";
-        dataString += String(sensorValue.un.magneticField.z);
+        dataString += String(sensorValue.un.rawMagnetometer.z);
         dataString += ",";
         dataString += String((micros()-start_time)/us,3);
         file.println(dataString);

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.stats import linregress
 
 plt.style.use('dark_background')
 
@@ -8,7 +9,7 @@ gi = 0
 mi = 0
 ri = 0
 
-with open('data05.csv') as f:
+with open('data_noFlush.csv') as f:
     lines = f.readlines()
     time = np.zeros((len(lines), 1))
     data = np.zeros((len(lines), 5, 4))
@@ -31,15 +32,58 @@ with open('data05.csv') as f:
             time[i] = tmp[5]
             ri += 1
 
-plt.plot(data[:, 3, 0])
-plt.plot(data[:, 3, 1])
-plt.plot(data[:, 3, 2])
-plt.plot(data[:, 4, 3])
-plt.plot(time)
-plt.xlabel("sample count (N)")
-plt.ylabel("time (s)")
-plt.legend(['a', 'g', 'm', 'r', 'all'])
+
+i_start = 0
+indx = 0
+slopes_a = np.zeros(50)
+slopes_g = np.zeros(50)
+
+for i in range(len(data)):
+    if data[i,3,0] > 4.98:
+        result = linregress(list(range(i_start,i)),data[i_start:i,3,0])
+        slope = 1/result.slope
+
+        if not np.isnan(slope):
+            slopes_a[indx] = slope
+            indx = indx + 1
+        i_start = i
+
+i_start = 0
+indx = 0
+
+for i in range(len(data)):
+    if data[i,3,1] > 4.97:
+        result = linregress(list(range(i_start,i)),data[i_start:i,3,1])
+        slope = 1/result.slope
+
+        if not np.isnan(slope):
+            slopes_g[indx] = slope
+            indx = indx + 1
+        i_start = i
+
+np.savetxt("magnetometer_ag_a.csv", slopes_a, delimiter=",")
+np.savetxt("magnetometer_ag_g.csv", slopes_g, delimiter=",")
+
+lower_bound = 0.9*np.array(list(range(10,510,10)))
+upper_bound = 2.1*np.array(list(range(10,510,10)))
+
+plt.plot(list(range(10,510,10)),slopes_a,'r')
+plt.plot(list(range(10,510,10)),slopes_g,'b')
+plt.plot(list(range(10,510,10)),lower_bound,'w-')
+plt.plot(list(range(10,510,10)),upper_bound,'w-')
+
+plt.xlabel("set sample rate (Hz)")
+plt.ylabel("actual sample rate (Hz)")
+plt.legend(['a', 'g'])
+plt.grid(which='both', color='w',  linestyle=':', linewidth=0.5)
 plt.show()
+
+#plt.plot(data[:, 3, 1])
+#plt.plot(data[:, 3, 2])
+#plt.plot(data[:, 4, 3])
+#plt.plot(time)
+#plt.legend(['a', 'g', 'm', 'r', 'all'])
+
 #
 # freq = np.zeros_like(data_raw)
 #
