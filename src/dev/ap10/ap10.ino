@@ -17,7 +17,11 @@
 
 // parameters
 
-int sr = 10; // sample rate, in Hz    
+int sr_start = 10; // sample rate, in Hz    
+int sr_stop = 510;
+int sr_step = 10;
+
+int sr = sr_start; // do not change
 
 // pins
 
@@ -120,9 +124,9 @@ void loop() {
     setReports();
   }
   
-  if (sr<501){
+  if (sr<sr_stop){
     if ((micros()-start_time)/us > 5){
-      sr = sr + 10;
+      sr = sr + sr_step;
       Serial.println(sr);
 //      bno08x.hardwareReset();
       delay(1000);
