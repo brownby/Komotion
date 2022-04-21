@@ -105,3 +105,11 @@ plt.ylabel("actual sample rate (Hz)")
 plt.legend(['a', 'g'])
 plt.grid(which='both', color='w', linestyle=':', linewidth=0.5)
 plt.show()
+
+# alternate plot
+
+#plt.style.use('dark_background')
+#plt.plot(a[:,3], list(range(0,len(a))),'r-')
+#plt.xlabel("time (s)")
+#plt.ylabel("samples")
+#plt.show()
