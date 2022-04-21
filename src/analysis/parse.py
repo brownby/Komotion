@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a200_g200.csv'
+fileName = 'data_a200_gsweep.csv'
 
 # sweep parameters
 sr_start = 10
@@ -88,17 +88,17 @@ for i, t in enumerate(m[:, 3]):
         i0 = 0
         flag = 0
 
-lower_bound = 0.9 * np.array(list(range(10, 510, 10)))
-upper_bound = 2.1 * np.array(list(range(10, 510, 10)))
+lower_bound = 0.9 * np.array(list(range(sr_start, sr_stop, sr_step)))
+upper_bound = 2.1 * np.array(list(range(sr_start, sr_stop, sr_step)))
 
 plt.style.use('dark_background')
 
-plt.plot(list(range(10, 510, 10)), a_sr, 'r')
-plt.plot(list(range(10, 510, 10)), g_sr, 'b')
+plt.plot(list(range(sr_start, sr_stop, sr_step)), a_sr, 'r')
+plt.plot(list(range(sr_start, sr_stop, sr_step)), g_sr, 'b')
 #plt.plot(list(range(10, 510, 10)), m_sr, 'm')
 #plt.plot(list(range(10, 510, 10)), r_sr, 'c')
-plt.plot(list(range(10, 510, 10)), lower_bound, 'w-')
-plt.plot(list(range(10, 510, 10)), upper_bound, 'w-')
+plt.plot(list(range(sr_start, sr_stop, sr_step)), lower_bound, 'w-')
+plt.plot(list(range(sr_start, sr_stop, sr_step)), upper_bound, 'w-')
 
 plt.xlabel("set sample rate (Hz)")
 plt.ylabel("actual sample rate (Hz)")
