@@ -18,7 +18,7 @@
 // parameters
 
 int sr_start = 10; // sample rate, in Hz    
-int sr_stop = 510;
+int sr_stop = 200;
 int sr_step = 10;
 
 int sr = sr_start; // do not change
@@ -109,12 +109,18 @@ void bnoDetails(void) {
 }
 
 void setReports(void) {
-  if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/200)) {
+  if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/250)) {
     Serial.println("could not enable accelerometer (!)");
   } 
-  if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/200)) {
-    Serial.println("could not enable accelerometer (!)");
-  } 
+//  if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/100)) {
+//    Serial.println("could not enable gyroscope (!)");
+//  } 
+//  if(!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/100)) {
+//    Serial.println("could not enable magnetometer (!)");
+//  }
+  if(!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/100)) {
+    Serial.println("could not enable rotation vector");
+  }
 }
 
 void loop() {
@@ -154,6 +160,30 @@ void loop() {
           dataString += String(sensorValue.un.gyroscope.y);
           dataString += ",";
           dataString += String(sensorValue.un.gyroscope.z);
+          dataString += ",";
+          dataString += String((micros()-start_time)/us,3);
+          file.println(dataString);
+          break;
+        case SH2_MAGNETIC_FIELD_CALIBRATED:
+          dataString += "m,";
+          dataString += String(sensorValue.un.magneticField.x);
+          dataString += ",";
+          dataString += String(sensorValue.un.magneticField.y);
+          dataString += ",";
+          dataString += String(sensorValue.un.magneticField.z);
+          dataString += ",";
+          dataString += String((micros()-start_time)/us,3);
+          file.println(dataString);
+          break;
+        case SH2_ROTATION_VECTOR:
+          dataString += "r,";
+          dataString += String(sensorValue.un.rotationVector.real);
+          dataString += ",";
+          dataString += String(sensorValue.un.rotationVector.i);
+          dataString += ",";
+          dataString += String(sensorValue.un.rotationVector.j);
+          dataString += ",";
+          dataString += String(sensorValue.un.rotationVector.k);
           dataString += ",";
           dataString += String((micros()-start_time)/us,3);
           file.println(dataString);

@@ -3,11 +3,11 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a200_gsweep.csv'
+fileName = 'data_a250_g100_m100_r100_v2.csv'
 
 # sweep parameters
 sr_start = 10
-sr_stop = 510
+sr_stop = 200
 sr_step = 10
 N = len(list(range(sr_start, sr_stop, sr_step)))  # number of runs
 
@@ -95,14 +95,14 @@ plt.style.use('dark_background')
 
 plt.plot(list(range(sr_start, sr_stop, sr_step)), a_sr, 'r')
 plt.plot(list(range(sr_start, sr_stop, sr_step)), g_sr, 'b')
-#plt.plot(list(range(10, 510, 10)), m_sr, 'm')
+plt.plot(list(range(sr_start, sr_stop, sr_step)), m_sr, 'm')
 #plt.plot(list(range(10, 510, 10)), r_sr, 'c')
 plt.plot(list(range(sr_start, sr_stop, sr_step)), lower_bound, 'w-')
 plt.plot(list(range(sr_start, sr_stop, sr_step)), upper_bound, 'w-')
 
 plt.xlabel("set sample rate (Hz)")
 plt.ylabel("actual sample rate (Hz)")
-plt.legend(['a', 'g'])
+plt.legend(['a', 'g', 'm'])
 plt.grid(which='both', color='w', linestyle=':', linewidth=0.5)
 plt.show()
 
