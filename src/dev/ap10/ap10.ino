@@ -149,7 +149,7 @@ void loop() {
           dataString += String(sensorValue.un.accelerometer.y);
           dataString += ",";
           dataString += String(sensorValue.un.accelerometer.z);
-          dataString += ",";
+          dataString += ", ,";
           dataString += String((micros()-start_time)/us,3);
           file.println(dataString);
           break;
@@ -160,7 +160,7 @@ void loop() {
           dataString += String(sensorValue.un.gyroscope.y);
           dataString += ",";
           dataString += String(sensorValue.un.gyroscope.z);
-          dataString += ",";
+          dataString += ", ,";
           dataString += String((micros()-start_time)/us,3);
           file.println(dataString);
           break;
@@ -171,7 +171,7 @@ void loop() {
           dataString += String(sensorValue.un.magneticField.y);
           dataString += ",";
           dataString += String(sensorValue.un.magneticField.z);
-          dataString += ",";
+          dataString += ", ,";
           dataString += String((micros()-start_time)/us,3);
           file.println(dataString);
           break;
