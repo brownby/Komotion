@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a250_r100_v2.csv'
+fileName = 'data_a250_r100_evan.csv'
 includeRotate = 1
 
 # sweep parameters
@@ -54,12 +54,12 @@ r_sr = np.zeros(N)
 i0 = 0
 run = 0
 flag = 1
-for i, t in enumerate(a[:, 3]):
+for i, t in enumerate(a[:, 4]):
     if t < 0.2:
         i0 = i
         flag = 1
     if 5 - t < 0.2 and flag:
-        regression = linregress(a[i0:i, 3], list(range(i0, i)))
+        regression = linregress(a[i0:i, 4], list(range(i0, i)))
         a_sr[run] = regression.slope
         run += 1
         i0 = 0
@@ -68,12 +68,12 @@ for i, t in enumerate(a[:, 3]):
 i0 = 0
 run = 0
 flag = 1
-for i, t in enumerate(g[:, 3]):
+for i, t in enumerate(g[:, 4]):
     if t < 0.2:
         i0 = i
         flag = 1
     if 5 - t < 0.2 and flag:
-        regression = linregress(g[i0:i, 3], list(range(i0, i)))
+        regression = linregress(g[i0:i, 4], list(range(i0, i)))
         g_sr[run] = regression.slope
         run += 1
         i0 = 0
@@ -82,12 +82,12 @@ for i, t in enumerate(g[:, 3]):
 i0 = 0
 run = 0
 flag = 1
-for i, t in enumerate(m[:, 3]):
+for i, t in enumerate(m[:, 4]):
     if t < 0.1:
         i0 = i
         flag = 1
     if 5 - t < 0.1 and flag:
-        regression = linregress(m[i0:i, 3], list(range(i0, i)))
+        regression = linregress(m[i0:i, 4], list(range(i0, i)))
         m_sr[run] = regression.slope
         run += 1
         i0 = 0
