@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a250_r100_evan.csv'
-includeRotate = 1
+fileName = 'data_a250_g100_m100.csv'
+includeRotate = 0
 
 # sweep parameters
 sr_start = 10
@@ -16,8 +16,10 @@ N = len(list(range(sr_start, sr_stop, sr_step)))  # number of runs
 
 if includeRotate:
     data = np.genfromtxt(fileName, delimiter=',', filling_values=-1, usecols=np.arange(1, 6))
+    indexOfInterest = 4
 else:
     data = np.loadtxt(fileName, delimiter=',', usecols=np.arange(1, 5))
+    indexOfInterest = 3
 
 dimen = np.loadtxt(fileName, dtype=str, delimiter=',', usecols=0)
 dimen_str = ['a', 'g', 'm', 'r']
@@ -54,12 +56,12 @@ r_sr = np.zeros(N)
 i0 = 0
 run = 0
 flag = 1
-for i, t in enumerate(a[:, 4]):
+for i, t in enumerate(a[:, indexOfInterest]):
     if t < 0.2:
         i0 = i
         flag = 1
     if 5 - t < 0.2 and flag:
-        regression = linregress(a[i0:i, 4], list(range(i0, i)))
+        regression = linregress(a[i0:i, indexOfInterest], list(range(i0, i)))
         a_sr[run] = regression.slope
         run += 1
         i0 = 0
@@ -68,12 +70,12 @@ for i, t in enumerate(a[:, 4]):
 i0 = 0
 run = 0
 flag = 1
-for i, t in enumerate(g[:, 4]):
+for i, t in enumerate(g[:, indexOfInterest]):
     if t < 0.2:
         i0 = i
         flag = 1
     if 5 - t < 0.2 and flag:
-        regression = linregress(g[i0:i, 4], list(range(i0, i)))
+        regression = linregress(g[i0:i, indexOfInterest], list(range(i0, i)))
         g_sr[run] = regression.slope
         run += 1
         i0 = 0
@@ -82,30 +84,31 @@ for i, t in enumerate(g[:, 4]):
 i0 = 0
 run = 0
 flag = 1
-for i, t in enumerate(m[:, 4]):
+for i, t in enumerate(m[:, indexOfInterest]):
     if t < 0.1:
         i0 = i
         flag = 1
     if 5 - t < 0.1 and flag:
-        regression = linregress(m[i0:i, 4], list(range(i0, i)))
+        regression = linregress(m[i0:i, indexOfInterest], list(range(i0, i)))
         m_sr[run] = regression.slope
         run += 1
         i0 = 0
         flag = 0
 
-i0 = 0
-run = 0
-flag = 1
-for i, t in enumerate(r[:, 4]):
-    if t < 0.1:
-        i0 = i
-        flag = 1
-    if 5 - t < 0.1 and flag:
-        regression = linregress(r[i0:i, 4], list(range(i0, i)))
-        r_sr[run] = regression.slope
-        run += 1
-        i0 = 0
-        flag = 0
+if includeRotate:
+    i0 = 0
+    run = 0
+    flag = 1
+    for i, t in enumerate(r[:, indexOfInterest]):
+        if t < 0.1:
+            i0 = i
+            flag = 1
+        if 5 - t < 0.1 and flag:
+            regression = linregress(r[i0:i, indexOfInterest], list(range(i0, i)))
+            r_sr[run] = regression.slope
+            run += 1
+            i0 = 0
+            flag = 0
 
 lower_bound = 0.9 * np.array(list(range(sr_start, sr_stop, sr_step)))
 upper_bound = 2.1 * np.array(list(range(sr_start, sr_stop, sr_step)))
