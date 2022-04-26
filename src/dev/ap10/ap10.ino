@@ -25,9 +25,11 @@ int sr = sr_start; // do not change
 
 // pins
 
-#define BNO08X_CS 10
-#define BNO08X_INT 9
+#define BNO08X_CS A4
+#define BNO08X_INT A5
 #define BNO08X_RESET 5
+#define P0 9
+#define P1 6
 
 // other
 
@@ -47,7 +49,14 @@ SdFile file;
 void setup() {
   const uint8_t BASE_NAME_SIZE = sizeof(FILE_BASE_NAME) - 1;
   char fileName[13] = FILE_BASE_NAME "00.csv";
+
+  pinMode(P0, OUTPUT);
+  pinMode(P1, OUTPUT);
+  // set BNO to SPI mode
+  digitalWrite(P0, HIGH);
+  digitalWrite(P1, HIGH);
   
+
   Serial.begin(115200);
   while(!Serial){
     delay(10);
