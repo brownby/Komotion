@@ -97,10 +97,6 @@ void setup() {
     sd.initErrorHalt();
   }
 
-  if (!file.open(fileName, O_WRONLY | O_CREAT | O_EXCL)) {
-    error("file.open");
-  }
-
   Serial.print("attempting to setup IMU...");
   if (!bno08x.begin_SPI(BNO08X_CS, BNO08X_INT)) {
         Serial.println(" failed to initialize BNO08x");
@@ -115,8 +111,7 @@ void setup() {
 
   digitalWrite(LED_BUILTIN, HIGH);
   delay(100);
-  bnoDetails();
-  setReports();  
+  bnoDetails();  
   start_time = micros();
 }
 
@@ -162,11 +157,11 @@ void setReports(bool &configState, int &configRate) {
 void loop() {
 
   for (byte i=0; i<14; i++){
-    char fileName[15];
+    String fileName;
     for (byte j=0; j<4; j++){
       if(dimenStates[i][j]){
-       fileName += dimenName[j];
-       fileName += dimenRate[j];
+       fileName += dimenNames[j];
+       fileName += dimenRates[j];
       }
     }
     fileName += ".csv";
@@ -232,11 +227,11 @@ void loop() {
         }
       }
       sr = sr + sr_step;
+      start_time = micros();  
     }
     bno08x.hardwareReset();
     delay(1000);
     setReports(dimenStates[i], dimenRates[i]);
-    start_time = micros();  
   }
   while(1){
     digitalWrite(LED_BUILTIN,LOW);
