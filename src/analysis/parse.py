@@ -3,14 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a250_g100_r100.csv'
+fileName = 'a250g100r100.csv'
 includeRotate = 1
 
 # sweep parameters
 sr_start = 10
-sr_stop = 200
+sr_stop = 210
 sr_step = 10
-N = len(list(range(sr_start, sr_stop, sr_step)))  # number of runs
+N = len(list(range(sr_start, sr_stop, sr_step))) # number of runs
 
 # import data from file
 
