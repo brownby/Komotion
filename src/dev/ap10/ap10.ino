@@ -20,8 +20,16 @@
 int sr_start = 10; // sample rate, in Hz    
 int sr_stop = 200;
 int sr_step = 10;
-
 int sr = sr_start; // do not change
+
+// characterization
+
+int dimen_states[14][4] = {{1,0,0,0},
+                           {0,1,0,0},
+                           {0,0,1,0},
+                           {0,0,0,1},
+                           {1,1,0,0}};
+                     
 
 // pins
 

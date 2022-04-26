@@ -3,8 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'data_a250_g100_m100.csv'
-includeRotate = 0
+fileName = 'data_a250_g100_r100.csv'
+includeRotate = 1
 
 # sweep parameters
 sr_start = 10
@@ -109,6 +109,25 @@ if includeRotate:
             run += 1
             i0 = 0
             flag = 0
+
+print('STDEV for (a):')
+print(np.std(a_sr))
+print('Average for (a):')
+print(np.average(a_sr))
+print('STDEV for (g):')
+print(np.std(g_sr))
+print('Average for (g):')
+print(np.average(g_sr))
+print('STDEV for (m):')
+print(np.std(m_sr))
+print('Average for (m):')
+print(np.average(m_sr))
+
+if includeRotate:
+    print('STDEV for (r):')
+    print(np.std(r_sr))
+    print('Average for (r):')
+    print(np.average(r_sr))
 
 lower_bound = 0.9 * np.array(list(range(sr_start, sr_stop, sr_step)))
 upper_bound = 2.1 * np.array(list(range(sr_start, sr_stop, sr_step)))
