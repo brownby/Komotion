@@ -112,7 +112,6 @@ void setup() {
   digitalWrite(LED_BUILTIN, HIGH);
   delay(100);
   bnoDetails();  
-  start_time = micros();
 }
 
 void bnoDetails(void) {
@@ -130,26 +129,54 @@ void bnoDetails(void) {
   }
 }
 
-void setReports(bool &configState, int &configRate) {
+void setReports(bool configState[], int configRate[]) {
 
   if (configState[0]){
-    if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
-      Serial.println("could not enable accelerometer (!)");
-    } 
+    if (configRate[0]<0){
+      if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/sr)) {
+        Serial.println("could not enable accelerometer (!)");
+      }
+    }
+    else{
+      if (!bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
+        Serial.println("could not enable accelerometer (!)");
+      }
+    }    
   }
   if (configState[1]){
-    if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[1])) {
-      Serial.println("could not enable gyroscope (!)");
-    } 
-  }
-  if (configState[2]){
-    if(!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[2])) {
-      Serial.println("could not enable magnetometer (!)");
+    if (configRate[1]<0){
+      if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/sr)) {
+        Serial.println("could not enable gyroscope (!)");
+      } 
+    }
+    else{
+      if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[1])) {
+        Serial.println("could not enable gyroscope (!)");
+      } 
     }
   }
-  if configState[3]{
-    if(!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[3])) {
-      Serial.println("could not enable rotation vector");
+  if (configState[2]){
+    if (configRate[2]<0){
+      if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/sr)) {
+        Serial.println("could not enable magnetometer (!)");
+      }
+    }
+    else{
+      if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[2])) {
+        Serial.println("could not enable magnetometer (!)");
+      }
+    }
+  }
+  if (configState[3]){
+    if (configRate[3]<0){
+      if (!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/sr)) {
+        Serial.println("could not enable rotation vector");
+      }
+    }
+    else{
+      if (!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[3])) {
+        Serial.println("could not enable rotation vector");
+      }
     }
   }
 }
@@ -157,20 +184,26 @@ void setReports(bool &configState, int &configRate) {
 void loop() {
 
   for (byte i=0; i<14; i++){
+    bno08x.hardwareReset();
+    delay(500);
+    setReports(dimenStates[i], dimenRates[i]);
     String fileName;
     for (byte j=0; j<4; j++){
       if(dimenStates[i][j]){
-       fileName += dimenNames[j];
-       fileName += dimenRates[j];
+       fileName += String(dimenNames[j]);
+       fileName += String(dimenRates[i][j]);
       }
     }
+    Serial.println(fileName);
     fileName += ".csv";
-    if (!file.open(fileName, O_WRONLY | O_CREAT | O_EXCL)) {
+    if (!file.open(fileName.c_str(), FILE_WRITE)) {
       error("file.open");
     }
+    sr = sr_start;
     while(sr<sr_stop){
       Serial.println(sr);
-      while(micros()-start_time/us < 5){
+      start_time = micros();
+      while((micros()-start_time)/us < 5){
         String dataString = "";
         if (!bno08x.getSensorEvent(&sensorValue)){}
         else{
@@ -227,11 +260,8 @@ void loop() {
         }
       }
       sr = sr + sr_step;
-      start_time = micros();  
     }
-    bno08x.hardwareReset();
-    delay(1000);
-    setReports(dimenStates[i], dimenRates[i]);
+    file.close();
   }
   while(1){
     digitalWrite(LED_BUILTIN,LOW);
