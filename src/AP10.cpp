@@ -44,10 +44,11 @@ void AP10::begin(std::array<char, 4> config, bool saveBat){
 
     if (!_saveBat){
         pinMode(AP10_NEOPIX, OUTPUT);
-        _pixNum = 1;
+        _pixNum = 0;
         _pixel.begin();
         _pixel.clear();
-        _pixel.setPixelColor(_pixNum,0,0,255);
+        _pixel.setPixelColor(_pixNum,0,0,100);
+        _pixel.show();
     }
 
     Serial.begin(115200);
@@ -199,7 +200,8 @@ void AP10::record(void){
             _recording = !_recording;
             if (!_saveBat){
                 _pixel.clear();
-                _pixel.setPixelColor(_pixNum,0,255,0);
+                _pixel.setPixelColor(_pixNum,0,100,0);
+                _pixel.show();
             }
             _file.open("data.csv",FILE_WRITE);
             Serial.println("recording");
@@ -265,7 +267,8 @@ void AP10::record(void){
             _recording = !_recording;
             if (!_saveBat){
                 _pixel.clear();
-                _pixel.setPixelColor(_pixNum,255,0,0);
+                _pixel.setPixelColor(_pixNum,100,0,0);
+                _pixel.show();
             }
             _file.close();
             Serial.println("in standby");
