@@ -19,7 +19,7 @@
 */
 
 AP10 sensor;
-//sensor.configure[4] = {'a','g','m','r'}; // enable as required
+std::array<char, 4> configure = {'a','g','m','r'}; // enable as required
 
 /*
    a = accelerometer (angular)
@@ -31,5 +31,5 @@ AP10 sensor;
    else, replace with character 'x'
 */
 
-void setup() { sensor.begin(); } 
+void setup() { sensor.begin(configure); } 
 void loop() { sensor.record(); }

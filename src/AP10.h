@@ -12,6 +12,7 @@
 #include "Arduino.h"
 #include "SdFat.h"
 #include <SPI.h>
+#include <array>
 #include <Adafruit_BNO08x.h>
 #include <Adafruit_NeoPixel.h>
 
@@ -30,9 +31,8 @@ class AP10
 {
     public:
         AP10();
-        void begin(void);
+        void begin(std::array<char, 4> config);
         void record(void);
-        char configure[4];      
     private:
         void _bnoDetails(void);
         void _setReports(bool configState[], int configRate[]);
@@ -44,6 +44,8 @@ class AP10
         int _dimenRates[14][4];
         unsigned long _start_time;
         String _dataString;
+
+        std::array<char, 4> _config;
         sh2_SensorValue_t _sensorValue;
 };
 

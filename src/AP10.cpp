@@ -16,8 +16,9 @@ Adafruit_NeoPixel _pixel(1, AP10_NEOPIX, NEO_GRB + NEO_KHZ800);
 
 AP10::AP10(){}
 
-void AP10::begin(void){
-
+void AP10::begin(std::array<char, 4> config){
+    
+    _config = config;
     _saveBat = false;
 
     // indicate in begin()
