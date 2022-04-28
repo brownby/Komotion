@@ -31,5 +31,5 @@ std::array<char, 4> configure = {'a','g','x','r'}; // enable as required
    else, replace with character 'x'
 */
 
-void setup() { sensor.begin(configure); } 
+void setup() { sensor.begin(configure, false); } 
 void loop() { sensor.record(); }

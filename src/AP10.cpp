@@ -16,16 +16,19 @@ Adafruit_NeoPixel _pixel(1, AP10_NEOPIX, NEO_GRB + NEO_KHZ800);
 
 AP10::AP10(){}
 
-void AP10::begin(std::array<char, 4> config){
+void AP10::begin(std::array<char, 4> config, bool saveBat){
     
     _config = config;
-    _saveBat = false;
+    _saveBat = saveBat;
 
     // indicate in begin()
 
     if (!_saveBat){
         pinMode(LED_BUILTIN, OUTPUT); 
         digitalWrite(LED_BUILTIN, HIGH);
+    }
+    else{
+        digitalWrite(LED_BUILTIN, LOW);
     }
 
     // setup BNO in SPI mode

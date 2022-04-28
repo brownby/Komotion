@@ -31,7 +31,7 @@ class AP10
 {
     public:
         AP10();
-        void begin(std::array<char, 4> config);
+        void begin(std::array<char, 4> config, bool saveBat);
         void record(void);
     private:
         void _bnoDetails(void);
