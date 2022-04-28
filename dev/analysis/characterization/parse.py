@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'a250g100r100.csv'
+fileName = 'a125g100m25r100.csv'
 includeRotate = 1
 
 # sweep parameters
@@ -109,6 +109,11 @@ if includeRotate:
             run += 1
             i0 = 0
             flag = 0
+
+np.savetxt("a_at.csv", a[:, 4], delimiter=",")
+np.savetxt("g_at.csv", g[:, 4], delimiter=",")
+np.savetxt("m_at.csv", m[:, 4], delimiter=",")
+np.savetxt("r_at.csv", r[:, 4], delimiter=",")
 
 print('STDEV for (a):')
 print(np.std(a_sr))

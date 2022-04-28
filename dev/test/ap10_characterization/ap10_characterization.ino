@@ -17,49 +17,56 @@
 
 // parameters
 
-int sr_start = 10; // sample rate, in Hz    
-int sr_stop = 210;
-int sr_step = 10;
+int sr_start = 5; // sample rate, in Hz    
+int sr_stop = 505;
+int sr_step = 5;
 int sr = sr_start; // do not change
 
 // characterization
 
 char dimenNames[4] = {'a','g','m','r'};
 
-bool dimenStates[14][4] = {{1,0,0,0},
-                            {0,1,0,0},
-                            {0,0,1,0},
-                            {0,0,0,1},
-                            {1,1,0,0},
-                            {1,0,1,0},
-                            {1,0,0,1},
-                            {0,1,1,0},
-                            {0,1,0,1},
-                            {0,0,1,1},
-                            {1,1,1,0},
-                            {0,1,1,1},
-                            {1,1,0,1},
-                            {1,1,1,1}};       
+const int numConfigs = 4;
 
-int dimenRates[14][4] = {{400,0,0,0},
-                         {0,250,0,0},
-                         {0,0,100,0},
-                         {0,0,0,250},
-                         {250,100,0,0},
-                         {250,0,100,0},
-                         {250,0,0,100},
-                         {0,100,100,0},
-                         {0,100,0,100},
-                         {0,0,100,100},
-                         {250,100,100,0},
-                         {0,100,100,100},
-                         {250,100,0,100},
-                         {250,100,100,100}};       
+bool dimenStates[numConfigs][4] = {{1,0,0,0}, // 14,4
+//                            {0,1,0,0},
+//                            {0,0,1,0},
+//                            {0,0,0,1},
+//                            {1,1,0,0},
+//                            {1,0,1,0},
+//                            {1,0,0,1},
+//                            {0,1,1,0},
+//                            {0,1,0,1},
+//                            {0,0,1,1},
+//                            {1,1,1,0},
+//                            {0,1,1,1},
+//                            {1,1,0,1},
+                              {0,1,0,0},
+                              {0,0,1,0},
+                              {0,0,0,1}};
+                                   
+
+int dimenRates[numConfigs][4] = {{-1,0,0,0},
+//                         {0,250,0,0},
+//                         {0,0,100,0},
+//                         {0,0,0,250},
+//                         {250,100,0,0},
+//                         {250,0,100,0},
+//                         {250,0,0,100},
+//                         {0,100,100,0},
+//                         {0,100,0,100},
+//                         {0,0,100,100},
+//                         {250,100,100,0},
+//                         {0,100,100,100},
+//                         {250,100,0,100},
+                           {0,-1,0,0},
+                           {0,0,-1,0},
+                           {0,0,0,-1}};       
 
 // pins
 
-#define BNO08X_CS A4
-#define BNO08X_INT A5
+#define BNO08X_CS 10//A4
+#define BNO08X_INT 9//A5
 #define BNO08X_RESET 5
 #define P0 9
 #define P1 6
@@ -81,11 +88,11 @@ SdFile file;
 
 void setup() {
 
-  pinMode(P0, OUTPUT);
-  pinMode(P1, OUTPUT);
-  // set BNO to SPI mode
-  digitalWrite(P0, HIGH);
-  digitalWrite(P1, HIGH);
+//  pinMode(P0, OUTPUT);
+//  pinMode(P1, OUTPUT);
+//  // set BNO to SPI mode
+//  digitalWrite(P0, HIGH);
+//  digitalWrite(P1, HIGH);
   
   Serial.begin(115200);
   while(!Serial){
@@ -183,10 +190,7 @@ void setReports(bool configState[], int configRate[]) {
 
 void loop() {
 
-  for (byte i=0; i<14; i++){
-    bno08x.hardwareReset();
-    delay(500);
-    setReports(dimenStates[i], dimenRates[i]);
+  for (byte i=0; i<numConfigs; i++){
     String fileName;
     for (byte j=0; j<4; j++){
       if(dimenStates[i][j]){
@@ -204,6 +208,9 @@ void loop() {
     }
     sr = sr_start;
     while(sr<sr_stop){
+      bno08x.hardwareReset();
+      delay(500);
+      setReports(dimenStates[i], dimenRates[i]);
       Serial.println(sr);
       start_time = micros();
       while((micros()-start_time)/us < 5){

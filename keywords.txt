@@ -1,0 +1,4 @@
+AP10    KEYWORD3
+begin   KEYWORD2
+record  KEYWORD2
+configure   KEYWORD2
