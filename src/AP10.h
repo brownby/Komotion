@@ -31,7 +31,7 @@ class AP10
 {
     public:
         AP10();
-        void begin(std::array<char, 4> config, bool saveBat);
+        void begin(char config[5], bool saveBat);
         void record(void);
     private:
         void _bnoDetails(void);
@@ -48,7 +48,7 @@ class AP10
         unsigned long _start_time;
         String _dataString;
 
-        std::array<char, 4> _config;
+        char _config[5];
         sh2_SensorValue_t _sensorValue;
 };
 

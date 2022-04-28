@@ -19,7 +19,7 @@
 */
 
 AP10 sensor;
-std::array<char, 4> configure = {'a','g','x','r'}; // enable as required
+char configure[] = "agmr"; // enable as required
 
 /*
    a = accelerometer (angular)
@@ -28,7 +28,6 @@ std::array<char, 4> configure = {'a','g','x','r'}; // enable as required
    r = rotation vector (orientation)
 
    if above letters are passed to configure -> measured
-   else, replace with character 'x'
 */
 
 void setup() { sensor.begin(configure, false); } 

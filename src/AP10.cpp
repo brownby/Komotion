@@ -16,11 +16,11 @@ Adafruit_NeoPixel _pixel(1, AP10_NEOPIX, NEO_GRB + NEO_KHZ800);
 
 AP10::AP10(){}
 
-void AP10::begin(std::array<char, 4> config, bool saveBat){
+void AP10::begin(char config[5], bool saveBat){
     
-    _config = config;
+    memcpy(_config, config, sizeof(_config));
     _saveBat = saveBat;
-
+    
     // indicate in begin()
 
     if (!_saveBat){
@@ -47,12 +47,12 @@ void AP10::begin(std::array<char, 4> config, bool saveBat){
         _pixNum = 0;
         _pixel.begin();
         _pixel.clear();
-        _pixel.setPixelColor(_pixNum,0,0,100);
+        _pixel.setPixelColor(_pixNum,0,0,50);
         _pixel.show();
     }
 
     Serial.begin(115200);
-    while(!Serial){delay(10);}
+    // while(!Serial){delay(10);}
 
     Serial.print("attempting to setup SD card...");
 
@@ -72,7 +72,7 @@ void AP10::begin(std::array<char, 4> config, bool saveBat){
 
     bool _dimenState[4] = {0,0,0,0};
 
-    for (int x = 0; x < 4; x++){
+    for (int x = 0; x < strlen(_config); x++){
         switch(_config[x]){
             case 'a':
                 _dimenState[0] = 1;
@@ -200,7 +200,7 @@ void AP10::record(void){
             _recording = !_recording;
             if (!_saveBat){
                 _pixel.clear();
-                _pixel.setPixelColor(_pixNum,0,100,0);
+                _pixel.setPixelColor(_pixNum,0,50,0);
                 _pixel.show();
             }
             _file.open("data.csv",FILE_WRITE);
@@ -267,7 +267,7 @@ void AP10::record(void){
             _recording = !_recording;
             if (!_saveBat){
                 _pixel.clear();
-                _pixel.setPixelColor(_pixNum,100,0,0);
+                _pixel.setPixelColor(_pixNum,50,0,0);
                 _pixel.show();
             }
             _file.close();
