@@ -66,6 +66,35 @@ void AP10::begin(std::array<char, 4> config){
     }
     Serial.println(" initialized");
 
+    bool _dimenState[4] = {0,0,0,0};
+
+    for (int x = 0; x < 4; x++){
+        switch(_config[x]){
+            case 'a':
+                _dimenState[0] = 1;
+                break;
+            case 'g':
+                _dimenState[1] = 1;
+                break;
+            case 'm':
+                _dimenState[2] = 1;
+                break;
+            case 'r':
+                _dimenState[3] = 1;
+                break;
+        }
+    }
+
+    // Serial.println("_config: ");
+    // for (int x = 0; x < 4; x++){
+    //     Serial.println(_config[x]);
+    // }
+
+    // Serial.println("_dimenState: ");
+    // for (int x = 0; x < 4; x++){
+    //     Serial.println(_dimenState[x]);
+    // }
+
     bool _dimenStates[14][4] = {{1,0,0,0}, // 14,4
                                 {0,1,0,0},
                                 {0,0,1,0},
@@ -80,8 +109,20 @@ void AP10::begin(std::array<char, 4> config){
                                 {0,1,1,1},
                                 {1,1,0,1},
                                 {1,1,1,1}};
-                                   
 
+    for (int x = 0; x < 14; x++){
+        int _countCompare = 0;
+        for (int y = 0; y < 4; y++){
+            if (_dimenStates[x][y] == _dimenState[y]){
+                _countCompare += 1;
+            }
+        }
+        if (_countCompare == 4){
+            _setConfig = x;
+            break;
+        } 
+    }
+                                   
     int _dimenRates[14][4] = {{400,0,0,0},
                               {0,250,0,0},
                               {0,0,100,0},
@@ -99,9 +140,7 @@ void AP10::begin(std::array<char, 4> config){
 
     delay(100);
     _bnoDetails();
-
-    _setReports(_dimenStates[14],_dimenRates[14]); // temp for testing
-    
+    _setReports(_dimenStates[_setConfig],_dimenRates[_setConfig]);
     _recording = false;  
 
     if (!_saveBat){

@@ -39,8 +39,11 @@ class AP10
         bool _saveBat;
         bool _recording;
         bool _dimenStates[14][4];
+        bool _dimenState[4];
         int _sd_cs;
         int _pixNum;
+        int _setConfig;  
+        int _countCompare;
         int _dimenRates[14][4];
         unsigned long _start_time;
         String _dataString;
