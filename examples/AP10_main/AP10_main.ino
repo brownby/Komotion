@@ -18,8 +18,8 @@
    Use 'Tools -> Manage Libraries' to install accordingly
 */
 
-AP10 sensor();
-sensor.configure[4] = {'a','g','m','r'}; // enable as required
+AP10 sensor;
+//sensor.configure[4] = {'a','g','m','r'}; // enable as required
 
 /*
    a = accelerometer (angular)
