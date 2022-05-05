@@ -71,6 +71,8 @@ void AP10::begin(char config[5], bool saveBat){
     }
     Serial.println(" initialized");
 
+    // look up desired rates for configuration
+
     bool _dimenState[4] = {0,0,0,0};
 
     for (int x = 0; x < strlen(_config); x++){
@@ -89,16 +91,6 @@ void AP10::begin(char config[5], bool saveBat){
                 break;
         }
     }
-
-    // Serial.println("_config: ");
-    // for (int x = 0; x < 4; x++){
-    //     Serial.println(_config[x]);
-    // }
-
-    // Serial.println("_dimenState: ");
-    // for (int x = 0; x < 4; x++){
-    //     Serial.println(_dimenState[x]);
-    // }
 
     bool _dimenStates[14][4] = {{1,0,0,0}, // 14,4
                                 {0,1,0,0},
@@ -210,8 +202,36 @@ void AP10::record(void){
                 _pixel.show();  
                 delay(1000);
             }
+            
+            // define filename, given existing files
+
+            uint8_t _fileNameSize = sizeof(baseName) - 1;
+            char _fileName[13] = baseName "00.csv";
+
+            while (_sd.exists(_fileName)) {
+                if (_fileName[_fileNameSize + 1] != '9') {
+                    _fileName[_fileNameSize + 1]++;
+                } else if (_fileName[_fileNameSize] != '9') {
+                    _fileName[_fileNameSize + 1] = '0';
+                    _fileName[_fileNameSize]++;
+                } 
+                else {
+                    while(true){
+                        Serial.println("cannot create file name");
+                        _pixel.clear();
+                        _pixel.setPixelColor(_pixNum,0,0,25);
+                        _pixel.show();
+                        delay(100);  
+                        _pixel.clear();
+                        _pixel.setPixelColor(_pixNum,0,0,0);
+                        _pixel.show();  
+                        delay(1000);
+                    }
+                }
+            }
+            Serial.println(_fileName);
             _recording = !_recording;
-            _file.open("data.csv",FILE_WRITE);    
+            _file.open(_fileName, FILE_WRITE);    
             if (!_saveBat){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,25,0,0);

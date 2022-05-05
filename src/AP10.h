@@ -26,7 +26,9 @@
 #define AP10_NEOPIX A0
 #define AP10_SD_CS 4
 #define AP10_SD_CD 7
+
 #define us 1000000.0
+#define baseName "data"
 
 class AP10
 {
@@ -48,8 +50,9 @@ class AP10
         int _dimenRates[14][4];
         unsigned long _start_time;
         String _dataString;
-
         char _config[5];
+        char _fileName[13];
+        uint8_t _fileNameSize;
         sh2_SensorValue_t _sensorValue;
 };
 
