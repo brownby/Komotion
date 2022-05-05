@@ -47,7 +47,7 @@ void AP10::begin(char config[5], bool saveBat){
         _pixNum = 0;
         _pixel.begin();
         _pixel.clear();
-        _pixel.setPixelColor(_pixNum,0,0,50);
+        _pixel.setPixelColor(_pixNum,0,0,25);
         _pixel.show();
     }
 
@@ -200,7 +200,7 @@ void AP10::record(void){
             _recording = !_recording;
             if (!_saveBat){
                 _pixel.clear();
-                _pixel.setPixelColor(_pixNum,0,50,0);
+                _pixel.setPixelColor(_pixNum,25,0,0);
                 _pixel.show();
             }
             _file.open("data.csv",FILE_WRITE);
@@ -267,7 +267,7 @@ void AP10::record(void){
             _recording = !_recording;
             if (!_saveBat){
                 _pixel.clear();
-                _pixel.setPixelColor(_pixNum,50,0,0);
+                _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();
             }
             _file.close();
