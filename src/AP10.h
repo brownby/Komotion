@@ -46,6 +46,7 @@ class AP10
         int _sd_cs;
         int _pixNum;
         int _setConfig;  
+        int _fileIndex;
         int _countCompare;
         int _dimenRates[14][4];
         unsigned long _start_time;

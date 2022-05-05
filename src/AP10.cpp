@@ -192,6 +192,8 @@ void AP10::record(void){
     }
     if(!digitalRead(AP10_SWITCH)){
         if(!_recording){
+            _recording = !_recording;
+
             while(!digitalRead(AP10_SD_CD)){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,0,25);
@@ -207,13 +209,16 @@ void AP10::record(void){
 
             uint8_t _fileNameSize = sizeof(baseName) - 1;
             char _fileName[13] = baseName "00.csv";
+            _fileIndex = 0;
 
             while (_sd.exists(_fileName)) {
                 if (_fileName[_fileNameSize + 1] != '9') {
                     _fileName[_fileNameSize + 1]++;
+                    _fileIndex++;
                 } else if (_fileName[_fileNameSize] != '9') {
                     _fileName[_fileNameSize + 1] = '0';
                     _fileName[_fileNameSize]++;
+                    _fileIndex++;
                 } 
                 else {
                     while(true){
@@ -230,7 +235,6 @@ void AP10::record(void){
                 }
             }
             Serial.println(_fileName);
-            _recording = !_recording;
             _file.open(_fileName, FILE_WRITE);    
             if (!_saveBat){
                 _pixel.clear();
@@ -298,6 +302,17 @@ void AP10::record(void){
     else{
         if(_recording){
             _recording = !_recording;
+            Serial.println(_fileIndex);
+            for (int x = 0; x < _fileIndex; x++){
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,25,0);
+                _pixel.show();
+                delay(100);  
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,0);
+                _pixel.show();  
+                delay(500);
+            }
             if (!_saveBat){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,0,0);
