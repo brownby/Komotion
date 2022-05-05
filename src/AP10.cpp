@@ -149,6 +149,8 @@ void AP10::begin(char config[5], bool saveBat){
 
     if (!_saveBat){
         _pixel.clear();
+        _pixel.setPixelColor(_pixNum,0,0,0);
+        _pixel.show();
         digitalWrite(LED_BUILTIN, LOW); // indicate end of begin()
     }
 }
