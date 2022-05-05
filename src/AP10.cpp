@@ -302,7 +302,6 @@ void AP10::record(void){
     else{
         if(_recording){
             _recording = !_recording;
-            Serial.println(_fileIndex);
             for (int x = 0; x < _fileIndex; x++){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,25,0);
