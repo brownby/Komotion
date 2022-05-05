@@ -302,6 +302,7 @@ void AP10::record(void){
     else{
         if(_recording){
             _recording = !_recording;
+            _file.close();
             for (int x = 0; x < _fileIndex; x++){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,25,0);
@@ -317,7 +318,6 @@ void AP10::record(void){
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();
             }
-            _file.close();
             Serial.println("in standby");
         }
     }
