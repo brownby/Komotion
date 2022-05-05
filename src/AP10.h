@@ -25,6 +25,7 @@
 #define AP10_SWITCH A1
 #define AP10_NEOPIX A0
 #define AP10_SD_CS 4
+#define AP10_SD_CD 7
 #define us 1000000.0
 
 class AP10

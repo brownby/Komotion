@@ -41,6 +41,7 @@ void AP10::begin(char config[5], bool saveBat){
     // setup switch, neopixel, other
 
     pinMode(AP10_SWITCH, INPUT_PULLUP);
+    pinMode(AP10_SD_CD, INPUT_PULLUP);
 
     if (!_saveBat){
         pinMode(AP10_NEOPIX, OUTPUT);
@@ -199,13 +200,23 @@ void AP10::record(void){
     }
     if(!digitalRead(AP10_SWITCH)){
         if(!_recording){
+            while(!digitalRead(AP10_SD_CD)){
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,25);
+                _pixel.show();
+                delay(100);  
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,0);
+                _pixel.show();  
+                delay(1000);
+            }
             _recording = !_recording;
+            _file.open("data.csv",FILE_WRITE);    
             if (!_saveBat){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,25,0,0);
                 _pixel.show();
             }
-            _file.open("data.csv",FILE_WRITE);
             Serial.println("recording");
             _start_time = micros();
         }
