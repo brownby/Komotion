@@ -59,7 +59,17 @@ void AP10::begin(char config[5], bool saveBat){
 
     _sd_cs = AP10_SD_CS;
     if (!_sd.begin(_sd_cs, SD_SCK_MHZ(12))) {
-        _sd.initErrorHalt();
+        while(!digitalRead(AP10_SD_CD)){
+            _pixel.clear();
+            _pixel.setPixelColor(_pixNum,0,0,25);
+            _pixel.show();
+            delay(100);  
+            _pixel.clear();
+            _pixel.setPixelColor(_pixNum,0,0,0);
+            _pixel.show();  
+            delay(1000);
+        }
+        _sd.begin(_sd_cs, SD_SCK_MHZ(12));
     }
     Serial.println(" initialized");
 
@@ -211,6 +221,8 @@ void AP10::record(void){
             char _fileName[13] = baseName "00.csv";
             _fileIndex = 0;
 
+            _sd.begin(_sd_cs, SD_SCK_MHZ(12)); 
+
             while (_sd.exists(_fileName)) {
                 if (_fileName[_fileNameSize + 1] != '9') {
                     _fileName[_fileNameSize + 1]++;
@@ -224,7 +236,7 @@ void AP10::record(void){
                     while(true){
                         Serial.println("cannot create file name");
                         _pixel.clear();
-                        _pixel.setPixelColor(_pixNum,0,0,25);
+                        _pixel.setPixelColor(_pixNum,25,25,0);
                         _pixel.show();
                         delay(100);  
                         _pixel.clear();
@@ -307,11 +319,11 @@ void AP10::record(void){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,25,0);
                 _pixel.show();
-                delay(100);  
+                delay(50);  
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
-                delay(500);
+                delay(300);
             }
             if (!_saveBat){
                 _pixel.clear();
