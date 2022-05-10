@@ -102,7 +102,7 @@ void AP10::begin(char config[5], bool saveBat){
         }
     }
 
-    bool _dimenStates[14][4] = {{1,0,0,0}, // 14,4
+    bool _dimenStates[15][4] = {{1,0,0,0}, // 15,4
                                 {0,1,0,0},
                                 {0,0,1,0},
                                 {0,0,0,1},
@@ -115,9 +115,10 @@ void AP10::begin(char config[5], bool saveBat){
                                 {1,1,1,0},
                                 {0,1,1,1},
                                 {1,1,0,1},
+                                {1,0,1,1},
                                 {1,1,1,1}};
 
-    for (int x = 0; x < 14; x++){
+    for (int x = 0; x < 15; x++){
         int _countCompare = 0;
         for (int y = 0; y < 4; y++){
             if (_dimenStates[x][y] == _dimenState[y]){
@@ -130,19 +131,20 @@ void AP10::begin(char config[5], bool saveBat){
         } 
     }
                                    
-    int _dimenRates[14][4] = {{400,0,0,0},
+    int _dimenRates[15][4] = {{400,0,0,0},
                               {0,250,0,0},
                               {0,0,100,0},
                               {0,0,0,250},
-                              {200,100,0,0},
-                              {250,0,100,0},
-                              {200,0,0,100},
+                              {125,100,0,0},
+                              {125,0,100,0},
+                              {125,0,0,100},
                               {0,100,100,0},
                               {0,100,0,100},
                               {0,0,100,100},
-                              {250,100,100,0},
+                              {125,100,100,0},
                               {0,100,100,100},
-                              {250,100,0,100},
+                              {125,100,0,100},
+                              {125,0,100,100},
                               {125,100,25,100}};   
 
     delay(100);
@@ -198,7 +200,7 @@ void AP10::_setReports(bool configState[], int configRate[]){
 
 void AP10::record(void){
     if (_bno08x.wasReset()){
-        _setReports(_dimenStates[14], _dimenRates[14]);
+        _setReports(_dimenStates[15], _dimenRates[15]);
     }
     if(!digitalRead(AP10_SWITCH)){
         if(!_recording){

@@ -1,10 +1,10 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-a = np.loadtxt('a_at.csv')
-g = np.loadtxt('g_at.csv')
-m = np.loadtxt('m_at.csv')
-r = np.loadtxt('r_at.csv')
+a = np.loadtxt('a400_5s.csv')
+g = np.loadtxt('g250_5s.csv')
+m = np.loadtxt('m100_5s.csv')
+r = np.loadtxt('r250_5s.csv')
 
 print(np.corrcoef(a))
 print(np.corrcoef(g))

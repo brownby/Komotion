@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import linregress
 
-fileName = 'a125g100m25r100.csv'
+fileName = 'm100.csv'
 includeRotate = 1
 
 # sweep parameters
@@ -85,10 +85,10 @@ i0 = 0
 run = 0
 flag = 1
 for i, t in enumerate(m[:, indexOfInterest]):
-    if t < 0.1:
+    if t < 0.2:
         i0 = i
         flag = 1
-    if 5 - t < 0.1 and flag:
+    if 5 - t < 0.2 and flag:
         regression = linregress(m[i0:i, indexOfInterest], list(range(i0, i)))
         m_sr[run] = regression.slope
         run += 1
@@ -100,10 +100,10 @@ if includeRotate:
     run = 0
     flag = 1
     for i, t in enumerate(r[:, indexOfInterest]):
-        if t < 0.1:
+        if t < 0.2:
             i0 = i
             flag = 1
-        if 5 - t < 0.1 and flag:
+        if 5 - t < 0.2 and flag:
             regression = linregress(r[i0:i, indexOfInterest], list(range(i0, i)))
             r_sr[run] = regression.slope
             run += 1
@@ -112,7 +112,7 @@ if includeRotate:
 
 np.savetxt("a_at.csv", a[:, 4], delimiter=",")
 np.savetxt("g_at.csv", g[:, 4], delimiter=",")
-np.savetxt("m_at.csv", m[:, 4], delimiter=",")
+np.savetxt("m100_5s.csv", m[:, 4], delimiter=",")
 np.savetxt("r_at.csv", r[:, 4], delimiter=",")
 
 print('STDEV for (a):')
