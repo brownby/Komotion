@@ -213,6 +213,10 @@ void AP10::record(void){
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
                 delay(1000);
+                if(digitalRead(AP10_SWITCH)){
+                    _recording = !_recording;
+                    return;
+                }
             }
             
             // define filename, given existing files
@@ -314,6 +318,7 @@ void AP10::record(void){
     else{
         if(_recording){
             _recording = !_recording;
+            Serial.println("writing to file");
             _file.close();
             for (int x = 0; x < _fileIndex; x++){
                 _pixel.clear();
