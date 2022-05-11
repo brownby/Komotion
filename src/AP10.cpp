@@ -152,7 +152,7 @@ void AP10::begin(char config[5], bool saveBat){
     _setReports(_dimenStates[_setConfig],_dimenRates[_setConfig]);
     _recording = false; 
 
-    LowPower.attachInterruptWakeup(AP10_SWITCH, lpCallback, FALLING);
+    // LowPower.attachInterruptWakeup(AP10_SWITCH, lpCallback, FALLING);
 
     if (!_saveBat){
         _pixel.clear();
@@ -340,7 +340,7 @@ void AP10::record(void){
                 _pixel.show();
             }
             Serial.println("in standby");
-            LowPower.deepSleep();
+            // LowPower.deepSleep();
         }
     }
 }
