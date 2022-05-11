@@ -9,13 +9,13 @@
 #ifndef AP10_h
 #define AP10_h
 
-#include "Arduino.h"
-#include "SdFat.h"
+#include <Arduino.h>
+#include <SdFat.h>
 #include <SPI.h>
 #include <array>
-#include <Adafruit_BNO08x.h>
 #include <Adafruit_NeoPixel.h>
-#include "ArduinoLowPower.h"
+#include <ArduinoLowPower.h>
+#include "ALL_Adafruit_BNO08x.h"
 
 #define BNO08X_P0 9
 #define BNO08X_P1 6

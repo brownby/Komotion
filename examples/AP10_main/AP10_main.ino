@@ -12,8 +12,8 @@
    Additional dependencies include:
 
    (1) SdFat.h
-   (2) Adafruit_BNO08x.h
-   (3) Adafruit_NeoPixel.h
+   (2) Adafruit_NeoPixel.h
+   (3) ArduinoLowPower.h
 
    Use 'Tools -> Manage Libraries' to install accordingly
 */
