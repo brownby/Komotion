@@ -15,6 +15,7 @@
 #include <array>
 #include <Adafruit_BNO08x.h>
 #include <Adafruit_NeoPixel.h>
+#include "ArduinoLowPower.h"
 
 #define BNO08X_P0 9
 #define BNO08X_P1 6
@@ -56,5 +57,7 @@ class AP10
         uint8_t _fileNameSize;
         sh2_SensorValue_t _sensorValue;
 };
+
+void lpCallback(void);
 
 #endif
