@@ -12,31 +12,66 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.interpolate import interp1d
-from scipy.signal import savgol_filter
+
+# import data from file
+fileName = "data06.csv"
+dimString = "agm"
+
+data = np.genfromtxt(fileName, delimiter=',', filling_values=-1, usecols=np.arange(1, 6))
+indexOfInterest = 4
+
+dimen = np.loadtxt(fileName, dtype=str, delimiter=',', usecols=0)
+dimen_str = ['a', 'g', 'm', 'r']
+
+# find indices (rows) for 9-axis dimensions + rotation
+
+a_index = np.nonzero(np.char.count(dimen, dimen_str[0]))
+g_index = np.nonzero(np.char.count(dimen, dimen_str[1]))
+m_index = np.nonzero(np.char.count(dimen, dimen_str[2]))
+r_index = np.nonzero(np.char.count(dimen, dimen_str[3]))
+
+# extract dimensions + rotation into separate arrays
+# with columns x, y, z, t or r, i, j, k, t
+
+a = data[a_index, :]
+g = data[g_index, :]
+m = data[m_index, :]
+r = data[r_index, :]
+
+# fix this
+
+a = a[0, :, :]
+g = g[0, :, :]
+m = m[0, :, :]
+r = r[0, :, :]
 
 plt.style.use('dark_background')
-dimensions = 6  # number of columns in data less one (time)
-window_size, poly_order = 11, 3 # window must be odd
+legendArr = []
 
-with open('data00.csv') as f:
-    lines = f.readlines()
-    data_raw = np.zeros((len(lines), dimensions+1))
-    for indx, line in enumerate(lines):
-        tmp = np.asarray(line.replace(",\n", "").split(','))
-        for indy, num in enumerate(tmp):
-            data_raw[indx, indy] = float(num)  # TODO - must have empty final line
+fig, axs = plt.subplots(2,2)
 
-xinterp = np.linspace(data_raw[:, dimensions].min(), data_raw[:, dimensions].max(), len(lines))
-data_interp = interp1d(xinterp, data_raw[:, 0:dimensions], kind='linear', axis=0)
-data_smooth = np.zeros_like(data_interp.y)
+if('a' in dimString):
+    axs[0,0].plot(a[:,-1], a[:,0], 'r')
+    axs[0,0].plot(a[:,-1], a[:,1], 'y')
+    axs[0,0].plot(a[:,-1], a[:,2], 'b')
+    axs[0,0].legend(["a_x", "a_y", "a_z"])
+    axs[0,0].set_xlabel("time (s)")
+    axs[0,0].set_ylabel("acceleration (m/s2)")
 
-for indy, column in enumerate(data_interp.y.T):
-    data_smooth.T[indy, :] = savgol_filter(column, window_size, poly_order)
+if('g' in dimString):
+    axs[0,1].plot(g[:,-1], g[:,0], 'r')
+    axs[0,1].plot(g[:,-1], g[:,1], 'y')
+    axs[0,1].plot(g[:,-1], g[:,2], 'b')
+    axs[0,1].legend(["g_x", "g_y", "g_z"])
+    axs[0,1].set_xlabel("time (s)")
+    axs[0,1].set_ylabel("angular velocity (rad/s)")
 
-plt.plot(xinterp, data_smooth)
-plt.xlabel('time (s)')
-plt.ylabel('magnitude')
-plt.legend(['a_x', 'a_y', 'a_z', 'g_x', 'g_y', 'g_z'], loc='upper right')
-plt.title("6-axis inertial measurement: walking")
+if('m' in dimString):
+    axs[1,0].plot(a[:,-1], a[:,0], 'r')
+    axs[1,0].plot(a[:,-1], a[:,1], 'y')
+    axs[1,0].plot(a[:,-1], a[:,2], 'b')
+    axs[1,0].legend(["m_x", "m_y", "m_z"])
+    axs[1,0].set_xlabel("time (s)")
+    axs[1,0].set_ylabel("magnetic field (uT)")
+
 plt.show()
