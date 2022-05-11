@@ -198,6 +198,7 @@ void AP10::_setReports(bool configState[], int configRate[]){
             Serial.println("could not enable rotation vector");
         }
     }
+    // if(!sh2_setCalConfig()) {Serial.println("succesfully set dynamic cal");}
 }
 
 void AP10::record(void){
