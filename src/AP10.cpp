@@ -202,7 +202,7 @@ void AP10::_setReports(bool configState[], int configRate[]){
 
 void AP10::record(void){
     if (_bno08x.wasReset()){
-        _setReports(_dimenStates[15], _dimenRates[15]);
+        _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
     }
     if(!digitalRead(AP10_SWITCH)){
         if(!_recording){
