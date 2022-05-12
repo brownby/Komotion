@@ -27,7 +27,7 @@ char dimenNames[5] = {'a','l','g','m','r'};
 
 const int numConfigs = 30;
 
-bool dimenStates[numConfigs][4] = {{1,0,0,0,0}, 
+bool dimenStates[numConfigs][5] = {{1,0,0,0,0}, 
                                    {0,1,0,0,0},
                                    {0,0,1,0,0},
                                    {0,0,0,1,0},
@@ -59,7 +59,7 @@ bool dimenStates[numConfigs][4] = {{1,0,0,0,0},
                                    {1,1,1,1,1}};
                                    
 
-int dimenRates[numConfigs][4] = {{400,0,0,0,0}, 
+int dimenRates[numConfigs][5] = {{400,0,0,0,0}, 
                                  {0,400,0,0,0},
                                  {0,0,250,0,0},
                                  {0,0,0,100,0},
@@ -95,11 +95,11 @@ int dimenRates[numConfigs][4] = {{400,0,0,0,0},
 
 // pins
 
-#define BNO08X_CS A4
-#define BNO08X_INT A5
+#define BNO08X_CS 10 //A4
+#define BNO08X_INT 9 //A5
 #define BNO08X_RESET 5
-#define P0 9
-#define P1 6
+//#define P0 9
+//#define P1 6
 
 // other
 
@@ -118,11 +118,11 @@ SdFile file;
 
 void setup() {
 
- pinMode(P0, OUTPUT);
- pinMode(P1, OUTPUT);
- // set BNO to SPI mode
- digitalWrite(P0, HIGH);
- digitalWrite(P1, HIGH);
+// pinMode(P0, OUTPUT);
+// pinMode(P1, OUTPUT);
+// // set BNO to SPI mode
+// digitalWrite(P0, HIGH);
+// digitalWrite(P1, HIGH);
   
   Serial.begin(115200);
   while(!Serial){
