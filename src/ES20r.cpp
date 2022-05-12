@@ -53,7 +53,7 @@ void ES20r::begin(char config[5], bool saveBat){
     }
 
     Serial.begin(115200);
-    while(!Serial){delay(10);}
+    // while(!Serial){delay(10);}
 
     Serial.print("attempting to setup SD card...");
 
