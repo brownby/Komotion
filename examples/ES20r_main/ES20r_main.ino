@@ -1,12 +1,12 @@
 /*
-   AP10_main.ino - Primary Sketch for AP10 Sensing Platform
+   ES20r_main.ino - Primary Sketch for AP10 Sensing Platform
    Created by Bejamin Y. Brown and J. Evan Smith
    Active Learning Labs
 
    last revised 28 April 2022
 */
 
-#include "AP10.h"
+#include "ES20r.h"
 
 /*
    Additional dependencies include:
@@ -18,7 +18,7 @@
    Use 'Tools -> Manage Libraries' to install accordingly
 */
 
-AP10 sensor;
+ES20r sensor;
 char configure[] = "agmr"; // enable as required
 
 /*

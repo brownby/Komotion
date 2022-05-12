@@ -1,13 +1,13 @@
 /*
-   AP10.h - Library for AP10 Sensing Platform
+   ES20r.h - Library for ES20r Sensing Platform
    Created by J. Evan Smith and Bejamin Y. Brown
    Active Learning Labs
 
    last revised 28 April 2022
 */
 
-#ifndef AP10_h
-#define AP10_h
+#ifndef ES20r_h
+#define ES20r_h
 
 #include <Arduino.h>
 #include <SdFat.h>
@@ -23,18 +23,18 @@
 #define BNO08X_INT A5
 #define BNO08X_RESET 5
 
-#define AP10_SWITCH A1
-#define AP10_NEOPIX A0
-#define AP10_SD_CS 4
-#define AP10_SD_CD 7
+#define ES20r_SWITCH A1
+#define ES20r_NEOPIX A0
+#define ES20r_SD_CS 4
+#define ES20r_SD_CD 7
 
 #define us 1000000.0
 #define baseName "data"
 
-class AP10
+class ES20r
 {
     public:
-        AP10();
+        ES20r();
         void begin(char config[5], bool saveBat);
         void record(void);
     private:

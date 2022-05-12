@@ -1,11 +1,8 @@
 """
    Simple plotter
-   for AP10 sensing platform
-   Parses data from CSV file,
-   interpolates samples, applies smoothing, and plots
-   written for python 3.8
-   modified 1 October 2021
-   by J. Evan Smith
+   for ES20r sensing platform
+   last modified 11 May 2022
+
    Active Learning Labs, Electrical Engineering
    https://www.seas.harvard.edu/active-learning-labs
  """

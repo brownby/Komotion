@@ -1,5 +1,5 @@
 /*
-   AP10.cpp - Library for AP10 Sensing Platform
+   ES20r.cpp - Library for ES20r Sensing Platform
    Created by J. Evan Smith and Bejamin Y. Brown
    Active Learning Labs
 
@@ -7,16 +7,16 @@
 */
 
 #include "Arduino.h"
-#include "AP10.h"
+#include "ES20r.h"
 
 SdFat _sd;
 SdFile _file;
 Adafruit_BNO08x _bno08x(BNO08X_RESET);
-Adafruit_NeoPixel _pixel(1, AP10_NEOPIX, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel _pixel(1, ES20r_NEOPIX, NEO_GRB + NEO_KHZ800);
 
-AP10::AP10(){}
+ES20r::ES20r(){}
 
-void AP10::begin(char config[5], bool saveBat){
+void ES20r::begin(char config[5], bool saveBat){
     
     memcpy(_config, config, sizeof(_config));
     _saveBat = saveBat;
@@ -40,11 +40,11 @@ void AP10::begin(char config[5], bool saveBat){
 
     // setup switch, neopixel, other
 
-    pinMode(AP10_SWITCH, INPUT_PULLUP);
-    pinMode(AP10_SD_CD, INPUT_PULLUP);
+    pinMode(ES20r_SWITCH, INPUT_PULLUP);
+    pinMode(ES20r_SD_CD, INPUT_PULLUP);
 
     if (!_saveBat){
-        pinMode(AP10_NEOPIX, OUTPUT);
+        pinMode(ES20r_NEOPIX, OUTPUT);
         _pixNum = 0;
         _pixel.begin();
         _pixel.clear();
@@ -57,9 +57,9 @@ void AP10::begin(char config[5], bool saveBat){
 
     Serial.print("attempting to setup SD card...");
 
-    _sd_cs = AP10_SD_CS;
+    _sd_cs = ES20r_SD_CS;
     if (!_sd.begin(_sd_cs, SD_SCK_MHZ(12))) {
-        while(!digitalRead(AP10_SD_CD)){
+        while(!digitalRead(ES20r_SD_CD)){
             _pixel.clear();
             _pixel.setPixelColor(_pixNum,0,0,25);
             _pixel.show();
@@ -152,7 +152,7 @@ void AP10::begin(char config[5], bool saveBat){
     _setReports(_dimenStates[_setConfig],_dimenRates[_setConfig]);
     _recording = false; 
 
-    // LowPower.attachInterruptWakeup(AP10_SWITCH, lpCallback, FALLING);
+    // LowPower.attachInterruptWakeup(ES20r_SWITCH, lpCallback, FALLING);
 
     if (!_saveBat){
         _pixel.clear();
@@ -162,7 +162,7 @@ void AP10::begin(char config[5], bool saveBat){
     }
 }
 
-void AP10::_bnoDetails(void){
+void ES20r::_bnoDetails(void){
     for (int n = 0; n < _bno08x.prodIds.numEntries; n++) {
         Serial.print("Part ");
         Serial.print(_bno08x.prodIds.entry[n].swPartNumber);
@@ -177,7 +177,7 @@ void AP10::_bnoDetails(void){
     }
 }
 
-void AP10::_setReports(bool configState[], int configRate[]){
+void ES20r::_setReports(bool configState[], int configRate[]){
     if (configState[0]){
         if (!_bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
             Serial.println("could not enable accelerometer (!)");
@@ -201,15 +201,15 @@ void AP10::_setReports(bool configState[], int configRate[]){
     // if(!sh2_setCalConfig()) {Serial.println("succesfully set dynamic cal");}
 }
 
-void AP10::record(void){
+void ES20r::record(void){
     if (_bno08x.wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
     }
-    if(!digitalRead(AP10_SWITCH)){
+    if(!digitalRead(ES20r_SWITCH)){
         if(!_recording){
             _recording = !_recording;
 
-            while(!digitalRead(AP10_SD_CD)){
+            while(!digitalRead(ES20r_SD_CD)){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,0,25);
                 _pixel.show();
@@ -218,7 +218,7 @@ void AP10::record(void){
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
                 delay(1000);
-                if(digitalRead(AP10_SWITCH)){
+                if(digitalRead(ES20r_SWITCH)){
                     _recording = !_recording;
                     return;
                 }
