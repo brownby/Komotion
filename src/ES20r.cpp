@@ -350,11 +350,14 @@ void ES20r::record(void){
             _recording = !_recording;
             Serial.println("writing to file");
             _file.close();
+            _pixel.clear();
+            _pixel.show();
+            delay(500);
             for (int x = 0; x < _fileIndex; x++){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,25,0);
                 _pixel.show();
-                delay(50);  
+                delay(300);  
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
