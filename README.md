@@ -1,4 +1,4 @@
-# AP10 - Physics of Sports
+# ES20r - Physics of Sports
  
 Development repository for course under development
 
