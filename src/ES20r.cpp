@@ -102,7 +102,7 @@ void ES20r::begin(char config[5], bool saveBat){
         }
     }
 
-    bool _dimenStatesInit[15][4] = {{1,0,0,0}, // 15,4
+    bool _dimenStatesInit[15][4] = {{1,0,0,0},
                                     {0,1,0,0},
                                     {0,0,1,0},
                                     {0,0,0,1},

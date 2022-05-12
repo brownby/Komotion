@@ -22,19 +22,21 @@ else:
     indexOfInterest = 3
 
 dimen = np.loadtxt(fileName, dtype=str, delimiter=',', usecols=0)
-dimen_str = ['a', 'g', 'm', 'r']
+dimen_str = ['a', 'l', 'g', 'm', 'r']
 
 # find indices (rows) for 9-axis dimensions + rotation
 
 a_index = np.nonzero(np.char.count(dimen, dimen_str[0]))
-g_index = np.nonzero(np.char.count(dimen, dimen_str[1]))
-m_index = np.nonzero(np.char.count(dimen, dimen_str[2]))
-r_index = np.nonzero(np.char.count(dimen, dimen_str[3]))
+l_index = np.nonzero(np.char.count(dimen, dimen_str[1]))
+g_index = np.nonzero(np.char.count(dimen, dimen_str[2]))
+m_index = np.nonzero(np.char.count(dimen, dimen_str[3]))
+r_index = np.nonzero(np.char.count(dimen, dimen_str[4]))
 
 # extract dimensions + rotation into separate arrays
 # with columns x, y, z, t or r, i, j, k, t
 
 a = data[a_index, :]
+l = data[l_index, :]
 g = data[g_index, :]
 m = data[m_index, :]
 r = data[r_index, :]
@@ -42,6 +44,7 @@ r = data[r_index, :]
 # fix this
 
 a = a[0, :, :]
+l = l[0, :, :]
 g = g[0, :, :]
 m = m[0, :, :]
 r = r[0, :, :]
@@ -49,6 +52,7 @@ r = r[0, :, :]
 # allocate arrays for runs (average sample rate)
 
 a_sr = np.zeros(N)
+l_sr = np.zeros(N)
 g_sr = np.zeros(N)
 m_sr = np.zeros(N)
 r_sr = np.zeros(N)
@@ -63,6 +67,20 @@ for i, t in enumerate(a[:, indexOfInterest]):
     if 5 - t < 0.2 and flag:
         regression = linregress(a[i0:i, indexOfInterest], list(range(i0, i)))
         a_sr[run] = regression.slope
+        run += 1
+        i0 = 0
+        flag = 0
+
+i0 = 0
+run = 0
+flag = 1
+for i, t in enumerate(l[:, indexOfInterest]):
+    if t < 0.2:
+        i0 = i
+        flag = 1
+    if 5 - t < 0.2 and flag:
+        regression = linregress(l[i0:i, indexOfInterest], list(range(i0, i)))
+        l_sr[run] = regression.slope
         run += 1
         i0 = 0
         flag = 0
@@ -111,28 +129,35 @@ if includeRotate:
             flag = 0
 
 np.savetxt("a_at.csv", a[:, 4], delimiter=",")
+np.savetxt("l_at.csv", l[:, 4], delimiter=",")
 np.savetxt("g_at.csv", g[:, 4], delimiter=",")
-np.savetxt("m100_5s.csv", m[:, 4], delimiter=",")
+np.savetxt("m_at.csv", m[:, 4], delimiter=",")
 np.savetxt("r_at.csv", r[:, 4], delimiter=",")
 
-print('STDEV for (a):')
-print(np.std(a_sr))
+
 print('Average for (a):')
 print(np.average(a_sr))
-print('STDEV for (g):')
-print(np.std(g_sr))
+print('STDEV for (a):')
+print(np.std(a_sr))
+print('Average for (l):')
+print(np.average(l_sr))
+print('STDEV for (l):')
+print(np.std(l_sr))
 print('Average for (g):')
 print(np.average(g_sr))
-print('STDEV for (m):')
-print(np.std(m_sr))
+print('STDEV for (g):')
+print(np.std(g_sr))
 print('Average for (m):')
 print(np.average(m_sr))
+print('STDEV for (m):')
+print(np.std(m_sr))
+
 
 if includeRotate:
-    print('STDEV for (r):')
-    print(np.std(r_sr))
     print('Average for (r):')
     print(np.average(r_sr))
+    print('STDEV for (r):')
+    print(np.std(r_sr))
 
 lower_bound = 0.9 * np.array(list(range(sr_start, sr_stop, sr_step)))
 upper_bound = 2.1 * np.array(list(range(sr_start, sr_stop, sr_step)))
@@ -140,6 +165,7 @@ upper_bound = 2.1 * np.array(list(range(sr_start, sr_stop, sr_step)))
 plt.style.use('dark_background')
 
 plt.plot(list(range(sr_start, sr_stop, sr_step)), a_sr, 'r')
+plt.plot(list(range(sr_start, sr_stop, sr_step)), l_sr, 'r:')
 plt.plot(list(range(sr_start, sr_stop, sr_step)), g_sr, 'b')
 plt.plot(list(range(sr_start, sr_stop, sr_step)), m_sr, 'm')
 plt.plot(list(range(sr_start, sr_stop, sr_step)), r_sr, 'c')
@@ -148,7 +174,7 @@ plt.plot(list(range(sr_start, sr_stop, sr_step)), upper_bound, 'w-')
 
 plt.xlabel("set sample rate (Hz)")
 plt.ylabel("actual sample rate (Hz)")
-plt.legend(['a', 'g', 'm', 'r'])
+plt.legend(['a', 'l', 'g', 'm', 'r'])
 plt.grid(which='both', color='w', linestyle=':', linewidth=0.5)
 plt.show()
 
