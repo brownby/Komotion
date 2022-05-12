@@ -157,7 +157,7 @@ void ES20r::begin(char config[5], bool saveBat){
     _setReports(_dimenStates[_setConfig],_dimenRates[_setConfig]);
     _recording = false; 
 
-    // LowPower.attachInterruptWakeup(ES20r_SWITCH, lpCallback, FALLING);
+    LowPower.attachInterruptWakeup(ES20r_SWITCH, lpCallback, FALLING);
 
     _accCal = 0;
     _gyroCal = 0;
@@ -366,8 +366,8 @@ void ES20r::record(void){
                 _pixel.show();
             }
             Serial.println("in standby");
-            // LowPower.deepSleep();
         }
+        LowPower.sleep();
     }
 }
 
