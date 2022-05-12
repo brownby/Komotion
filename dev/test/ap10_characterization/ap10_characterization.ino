@@ -1,11 +1,10 @@
 /*
-  Data logger for AP10: Physics of Sports
+  Data logger for ES 20r: Physics of Sports
 
   Writes requested reports to a text file (csv)
   and allows for configuration of requested sample rate
 
-  modified 26 April 2022
-  by J. Evan Smith
+  modified 12 May 2022
 
   Active Learning Labs, Electrical Engineering
   https://www.seas.harvard.edu/active-learning-labs
@@ -24,42 +23,76 @@ int sr = sr_start; // do not change
 
 // characterization
 
-char dimenNames[4] = {'a','g','m','r'};
+char dimenNames[5] = {'a','l','g','m','r'};
 
-const int numConfigs = 3;
+const int numConfigs = 30;
 
-bool dimenStates[numConfigs][4] = //{{1,0,0,0}, // 15,4
-                          //  {0,1,0,0},
-                          //  {0,0,1,0},
-                          //  {0,0,0,1},
-                           {{1,1,0,0},
-                           {1,0,1,0},
-                           {1,0,0,1}};
-                          //  {0,1,1,0},
-                          //  {0,1,0,1},
-                          //  {0,0,1,1},
-                          //  {{1,1,1,0},
-                          //  {0,1,1,1},
-                          //  {1,1,0,1},
-                          //  {1,0,1,1},
-                          //  {1,1,1,1}};
+bool dimenStates[numConfigs][4] = {{1,0,0,0,0}, 
+                                   {0,1,0,0,0},
+                                   {0,0,1,0,0},
+                                   {0,0,0,1,0},
+                                   {0,0,0,0,1},
+                                   {1,0,1,0,0},
+                                   {0,1,1,0,0},
+                                   {1,1,1,0,0},
+                                   {1,0,0,1,0},
+                                   {0,1,0,1,0},
+                                   {1,1,0,1,0},
+                                   {1,0,0,0,1},
+                                   {0,1,0,0,1},
+                                   {1,1,0,0,1},
+                                   {0,0,1,1,0},
+                                   {0,0,1,0,1},
+                                   {0,0,0,1,1},
+                                   {1,0,1,1,0},
+                                   {0,1,1,1,0},
+                                   {1,1,1,1,0},
+                                   {0,0,1,1,1},
+                                   {1,0,1,0,1},
+                                   {0,1,1,0,1},
+                                   {1,1,1,0,1},
+                                   {1,0,0,1,1},
+                                   {0,1,0,1,1},
+                                   {1,1,0,1,1},
+                                   {1,0,1,1,1},
+                                   {0,1,1,1,1},
+                                   {1,1,1,1,1}};
                                    
 
-int dimenRates[numConfigs][4] = //{{400,0,0,0},
-                        // {0,250,0,0},
-                        // {0,0,100,0},
-                        // {0,0,0,250},
-                        {{125,100,0,0},
-                        {125,0,100,0},
-                        {125,0,0,100}};
-                        // {0,100,100,0},
-                        // {0,100,0,100},
-                        // {0,0,100,100},
-                        // {250,100,100,0},
-                        // {0,100,100,100},
-                        // {250,100,0,100},
-                        // {125,0,100,100},
-                        // {125,100,25,100}};
+int dimenRates[numConfigs][4] = {{400,0,0,0,0}, 
+                                 {0,400,0,0,0},
+                                 {0,0,250,0,0},
+                                 {0,0,0,100,0},
+                                 {0,0,0,0,250},
+                                 {125,0,100,0,0},
+                                 {0,125,100,0,0},
+                                 {125,125,100,0,0},
+                                 {125,0,0,100,0},
+                                 {0,125,0,100,0},
+                                 {125,125,0,100,0},
+                                 {125,0,0,0,100},
+                                 {0,125,0,0,100},
+                                 {125,125,0,0,100},
+                                 {0,0,100,100,0},
+                                 {0,0,100,0,100},
+                                 {0,0,0,100,100},
+                                 {125,0,100,100,0},
+                                 {0,125,100,100,0},
+                                 {125,125,100,100,0},
+                                 {0,0,100,100,100},
+                                 {125,0,100,0,100},
+                                 {0,125,100,0,100},
+                                 {125,125,100,0,100},
+                                 {125,0,0,100,100},
+                                 {0,125,0,100,100},
+                                 {125,125,0,100,100},
+                                 {125,0,100,25,100},
+                                 {0,125,100,25,100},
+                                 {125,125,100,25,100}};
+
+
+
+
 // pins
 
 #define BNO08X_CS A4
@@ -149,36 +182,48 @@ void setReports(bool configState[], int configRate[]) {
   }
   if (configState[1]){
     if (configRate[1]<0){
+      if (!bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/sr)) {
+        Serial.println("could not enable accelerometer (!)");
+      }
+    }
+    else{
+      if (!bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
+        Serial.println("could not enable accelerometer (!)");
+      }
+    }    
+  }
+  if (configState[2]){
+    if (configRate[2]<0){
       if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/sr)) {
         Serial.println("could not enable gyroscope (!)");
       } 
     }
     else{
-      if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[1])) {
+      if (!bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
         Serial.println("could not enable gyroscope (!)");
       } 
     }
   }
-  if (configState[2]){
-    if (configRate[2]<0){
+  if (configState[3]){
+    if (configRate[3]<0){
       if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/sr)) {
         Serial.println("could not enable magnetometer (!)");
       }
     }
     else{
-      if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[2])) {
+      if (!bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
         Serial.println("could not enable magnetometer (!)");
       }
     }
   }
-  if (configState[3]){
-    if (configRate[3]<0){
+  if (configState[4]){
+    if (configRate[4]<0){
       if (!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/sr)) {
         Serial.println("could not enable rotation vector");
       }
     }
     else{
-      if (!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[3])) {
+      if (!bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
         Serial.println("could not enable rotation vector");
       }
     }
@@ -189,7 +234,7 @@ void loop() {
 
   for (byte i=0; i<numConfigs; i++){
     String fileName;
-    for (byte j=0; j<4; j++){
+    for (byte j=0; j<5; j++){
       if(dimenStates[i][j]){
        fileName += String(dimenNames[j]);
        fileName += String(dimenRates[i][j]);
@@ -222,6 +267,17 @@ void loop() {
               dataString += String(sensorValue.un.accelerometer.y);
               dataString += ",";
               dataString += String(sensorValue.un.accelerometer.z);
+              dataString += ", ,";
+              dataString += String((micros()-start_time)/us,3);
+              file.println(dataString);
+              break;
+            case SH2_LINEAR_ACCELERATION:
+              dataString += "l,";
+              dataString += String(sensorValue.un.linearAcceleration.x);
+              dataString += ",";
+              dataString += String(sensorValue.un.linearAcceleration.y);
+              dataString += ",";
+              dataString += String(sensorValue.un.linearAcceleration.z);
               dataString += ", ,";
               dataString += String((micros()-start_time)/us,3);
               file.println(dataString);
