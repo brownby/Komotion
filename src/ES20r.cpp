@@ -53,7 +53,7 @@ void ES20r::begin(char config[5], bool saveBat){
     }
 
     Serial.begin(115200);
-    // while(!Serial){delay(10);}
+    while(!Serial){delay(10);}
 
     Serial.print("attempting to setup SD card...");
 
@@ -102,21 +102,23 @@ void ES20r::begin(char config[5], bool saveBat){
         }
     }
 
-    bool _dimenStates[15][4] = {{1,0,0,0}, // 15,4
-                                {0,1,0,0},
-                                {0,0,1,0},
-                                {0,0,0,1},
-                                {1,1,0,0},
-                                {1,0,1,0},
-                                {1,0,0,1},
-                                {0,1,1,0},
-                                {0,1,0,1},
-                                {0,0,1,1},
-                                {1,1,1,0},
-                                {0,1,1,1},
-                                {1,1,0,1},
-                                {1,0,1,1},
-                                {1,1,1,1}};
+    bool _dimenStatesInit[15][4] = {{1,0,0,0}, // 15,4
+                                    {0,1,0,0},
+                                    {0,0,1,0},
+                                    {0,0,0,1},
+                                    {1,1,0,0},
+                                    {1,0,1,0},
+                                    {1,0,0,1},
+                                    {0,1,1,0},
+                                    {0,1,0,1},
+                                    {0,0,1,1},
+                                    {1,1,1,0},
+                                    {0,1,1,1},
+                                    {1,1,0,1},
+                                    {1,0,1,1},
+                                    {1,1,1,1}};
+    memcpy(_dimenStates, _dimenStatesInit, sizeof(_dimenStates));
+
 
     for (int x = 0; x < 15; x++){
         int _countCompare = 0;
@@ -131,7 +133,7 @@ void ES20r::begin(char config[5], bool saveBat){
         } 
     }
                                    
-    int _dimenRates[15][4] = {{400,0,0,0},
+    int _dimenRatesInit[15][4] = {{400,0,0,0},
                               {0,250,0,0},
                               {0,0,100,0},
                               {0,0,0,250},
@@ -146,6 +148,7 @@ void ES20r::begin(char config[5], bool saveBat){
                               {125,100,0,100},
                               {125,0,100,100},
                               {125,100,25,100}};   
+    memcpy(_dimenRates, _dimenRatesInit, sizeof(_dimenRates));
 
     delay(100);
     _bnoDetails();
@@ -154,12 +157,16 @@ void ES20r::begin(char config[5], bool saveBat){
 
     // LowPower.attachInterruptWakeup(ES20r_SWITCH, lpCallback, FALLING);
 
+    _accCal = 0;
+    _gyroCal = 0;
+    _magCal = 0;
     if (!_saveBat){
         _pixel.clear();
         _pixel.setPixelColor(_pixNum,0,0,0);
         _pixel.show();
         digitalWrite(LED_BUILTIN, LOW); // indicate end of begin()
     }
+    calibrate();
 }
 
 void ES20r::_bnoDetails(void){
@@ -202,7 +209,7 @@ void ES20r::_setReports(bool configState[], int configRate[]){
             Serial.println("could not enable rotation vector");
         }
     }
-    if(!sh2_setCalConfig(calConfig)) {Serial.println("succesfully set dynamic cal");}
+    if(!sh2_setCalConfig(calConfig)) {Serial.print("succesfully set dynamic cal: "); Serial.println(calConfig);}
 }
 
 void ES20r::record(void){
@@ -274,6 +281,7 @@ void ES20r::record(void){
         else{
           switch (_sensorValue.sensorId) {
             case SH2_ACCELEROMETER:
+              _accCal = _sensorValue.status;
               _dataString += "a,";
               _dataString += String(_sensorValue.un.accelerometer.x);
               _dataString += ",";
@@ -281,6 +289,9 @@ void ES20r::record(void){
               _dataString += ",";
               _dataString += String(_sensorValue.un.accelerometer.z);
               _dataString += ", ,";
+            //   _dataString += ",";
+            //   _dataString += String(_accCal);
+            //   _dataString += ",";
               _dataString += String((micros()-_start_time)/us,3);
               _file.println(_dataString);
               break;
@@ -292,8 +303,12 @@ void ES20r::record(void){
               _dataString += ",";
               _dataString += String(_sensorValue.un.gyroscope.z);
               _dataString += ", ,";
+            //   _dataString += ",";
+            //   _dataString += String(_gyroCal);
+            //   _dataString += ",";
               _dataString += String((micros()-_start_time)/us,3);
               _file.println(_dataString);
+              _gyroCal = _sensorValue.status;
               break;
             case SH2_MAGNETIC_FIELD_CALIBRATED:
               _dataString += "m,";
@@ -303,8 +318,12 @@ void ES20r::record(void){
               _dataString += ",";
               _dataString += String(_sensorValue.un.magneticField.z);
               _dataString += ", ,";
+            //   _dataString += ",";
+            //   _dataString += String(_magCal);
+            //   _dataString += ",";
               _dataString += String((micros()-_start_time)/us,3);
               _file.println(_dataString);
+              _magCal = _sensorValue.status;
               break;
             case SH2_ROTATION_VECTOR:
               _dataString += "r,";
@@ -346,6 +365,51 @@ void ES20r::record(void){
             }
             Serial.println("in standby");
             // LowPower.deepSleep();
+        }
+    }
+}
+
+void ES20r::calibrate() {
+    while(digitalRead(ES20r_SWITCH)) { // keep calibrating until record switch is switched to record
+        if (!_bno08x.getSensorEvent(&_sensorValue)){continue;}
+        else {
+            switch (_sensorValue.sensorId) {
+                case SH2_ACCELEROMETER:
+                    _accCal = _sensorValue.status;
+                    break;
+                case SH2_GYROSCOPE_CALIBRATED:
+                    _gyroCal = _sensorValue.status;
+                    break;
+                case SH2_MAGNETIC_FIELD_CALIBRATED:
+                    _magCal = _sensorValue.status;
+                break;
+            }
+        }
+        int lowestCal = 4;
+        if(_dimenStates[_setConfig][0]) {
+            if(_accCal < lowestCal) lowestCal = _accCal;
+        }
+        if(_dimenStates[_setConfig][1]) {
+            if(_gyroCal < lowestCal) lowestCal = _gyroCal;
+        }
+        if(_dimenStates[_setConfig][2]) {
+            if(_magCal < lowestCal) lowestCal = _magCal;
+        }
+
+        if (lowestCal == 0 || lowestCal == 1) {
+            _pixel.clear();
+            _pixel.setPixelColor(_pixNum,25,0,0);
+            _pixel.show();
+        }
+        else if (lowestCal == 2) {
+            _pixel.clear();
+            _pixel.setPixelColor(_pixNum,12,12,0);
+            _pixel.show();
+        }
+        else if (lowestCal == 3) {
+            _pixel.clear();
+            _pixel.setPixelColor(_pixNum,0,25,0);
+            _pixel.show();
         }
     }
 }

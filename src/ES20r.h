@@ -37,25 +37,29 @@ class ES20r
         ES20r();
         void begin(char config[5], bool saveBat);
         void record(void);
+        void calibrate(void);
     private:
         void _bnoDetails(void);
         void _setReports(bool configState[], int configRate[]);
         bool _saveBat;
         bool _recording;
-        bool _dimenStates[14][4];
+        bool _dimenStates[15][4];
         bool _dimenState[4];
         int _sd_cs;
         int _pixNum;
         int _setConfig;  
         int _fileIndex;
         int _countCompare;
-        int _dimenRates[14][4];
+        int _dimenRates[15][4];
         unsigned long _start_time;
         String _dataString;
         char _config[5];
         char _fileName[13];
         uint8_t _fileNameSize;
         sh2_SensorValue_t _sensorValue;
+        int _accCal;
+        int _gyroCal;
+        int _magCal;
 };
 
 void lpCallback(void);
