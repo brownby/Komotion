@@ -178,17 +178,21 @@ void ES20r::_bnoDetails(void){
 }
 
 void ES20r::_setReports(bool configState[], int configRate[]){
+    uint8_t calConfig = 0;
     if (configState[0]){
+        calConfig |= SH2_CAL_ACCEL;
         if (!_bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
             Serial.println("could not enable accelerometer (!)");
         }
     }
     if (configState[1]){
+        calConfig |= SH2_CAL_GYRO;
         if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[1])) {
             Serial.println("could not enable gyroscope (!)"); 
         }
     }
     if (configState[2]){
+        calConfig |= SH2_CAL_MAG;
         if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[2])) {
             Serial.println("could not enable magnetometer (!)");
         }
@@ -198,7 +202,7 @@ void ES20r::_setReports(bool configState[], int configRate[]){
             Serial.println("could not enable rotation vector");
         }
     }
-    // if(!sh2_setCalConfig()) {Serial.println("succesfully set dynamic cal");}
+    if(!sh2_setCalConfig(calConfig)) {Serial.println("succesfully set dynamic cal");}
 }
 
 void ES20r::record(void){
