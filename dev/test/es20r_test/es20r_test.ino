@@ -1,10 +1,10 @@
 /*
-  Data logger for AP10: Physics of Sports
+  Data logger for ES 20r: Physics of Sports
 
   Writes requested reports to a text file (csv)
   and allows for configuration of requested sample rate
 
-  modified 14 April 2022
+  modified 13 May 2022
   by J. Evan Smith
 
   Active Learning Labs, Electrical Engineering
