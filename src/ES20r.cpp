@@ -401,9 +401,10 @@ void ES20r::calibrate() {
             if(_magCal < lowestCal) lowestCal = _magCal;
         }
 
+        // lowestCal = 1;
         if (lowestCal == 0 || lowestCal == 1) {
             _pixel.clear();
-            _pixel.setPixelColor(_pixNum,25,0,0);
+            _pixel.setPixelColor(_pixNum,35,8,0);
             _pixel.show();
         }
         else if (lowestCal == 2) {
@@ -415,6 +416,16 @@ void ES20r::calibrate() {
             _pixel.clear();
             _pixel.setPixelColor(_pixNum,0,25,0);
             _pixel.show();
+            for(int i = 0; i < 5; i++) {
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,6,22,20);
+                _pixel.show();
+                delay(100);
+                _pixel.clear();
+                _pixel.show();
+                delay(100);
+            }
+            return;
         }
     }
 }
