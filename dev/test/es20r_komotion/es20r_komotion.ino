@@ -30,8 +30,8 @@ void setup() {
 void loop() {
   if (digitalRead(switchPin)){
     digitalWrite(LED_BUILTIN,HIGH);
-    int newPan = random(1100,1900);
-    int newTilt = random(1100,1900);
+    int newPan = random(1050,1950);
+    int newTilt = random(1050,1950);
     pan.writeMicroseconds(newPan);
     tilt.writeMicroseconds(newTilt);
     delay(200);
