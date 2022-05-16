@@ -34,12 +34,10 @@ void ES20r::begin(char config[5], bool saveBat){
 
     // setup BNO in SPI mode
 
-    // pinMode(BNO08X_P0, OUTPUT);
-    // pinMode(BNO08X_P1, OUTPUT);
-    // digitalWrite(BNO08X_P0, HIGH);
-    // digitalWrite(BNO08X_P1, HIGH);
-    pinMode(BNO08X_P0, INPUT_PULLDOWN);
-    pinMode(BNO08X_P1, INPUT_PULLDOWN);
+    pinMode(BNO08X_P0, OUTPUT);
+    pinMode(BNO08X_P1, OUTPUT);
+    digitalWrite(BNO08X_P0, HIGH);
+    digitalWrite(BNO08X_P1, HIGH);
 
     // setup switch, neopixel, other
 
