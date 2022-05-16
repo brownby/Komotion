@@ -146,7 +146,7 @@ void setup() {
   }
   Serial.println(" BNO08x initialized");
 
-  //pinMode(record_en, INPUT_PULLUP);
+  pinMode(SWITCH, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
 
   digitalWrite(LED_BUILTIN, LOW);
