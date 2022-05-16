@@ -100,6 +100,7 @@ int dimenRates[numConfigs][5] = {{400,0,0,0,0},
 #define BNO08X_CS A4
 #define BNO08X_INT A5
 #define BNO08X_RESET 5
+#define SWITCH A1
 #define P0 9
 #define P1 6
 
@@ -127,9 +128,9 @@ void setup() {
  digitalWrite(P1, HIGH);
   
   Serial.begin(115200);
-  while(!Serial){
-    delay(10);
-  }
+//  while(!Serial){
+//    delay(10);
+//  }
 
   Serial.print("attempting to setup sd card...");
   if (!sd.begin(sd_chipSelect, SD_SCK_MHZ(12))) {
@@ -148,7 +149,7 @@ void setup() {
   //pinMode(record_en, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  digitalWrite(LED_BUILTIN, HIGH);
+  digitalWrite(LED_BUILTIN, LOW);
   delay(100);
   bnoDetails();  
 }
@@ -233,7 +234,10 @@ void setReports(bool configState[], int configRate[]) {
 }
 
 void loop() {
-
+  while(digitalRead(SWITCH)){
+    delay(500);
+  }
+  digitalWrite(LED_BUILTIN, HIGH);
   for (byte i=0; i<numConfigs; i++){
     String fileName;
     for (byte j=0; j<5; j++){
