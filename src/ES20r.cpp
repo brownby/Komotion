@@ -13,6 +13,7 @@ SdFat _sd;
 SdFile _file;
 Adafruit_BNO08x _bno08x(BNO08X_RESET);
 Adafruit_NeoPixel _pixel(1, ES20r_NEOPIX, NEO_GRB + NEO_KHZ800);
+bool lpFlag = false;
 
 ES20r::ES20r(){}
 
@@ -33,10 +34,12 @@ void ES20r::begin(char config[5], bool saveBat){
 
     // setup BNO in SPI mode
 
-    pinMode(BNO08X_P0, OUTPUT);
-    pinMode(BNO08X_P1, OUTPUT);
-    digitalWrite(BNO08X_P0, HIGH);
-    digitalWrite(BNO08X_P1, HIGH);
+    // pinMode(BNO08X_P0, OUTPUT);
+    // pinMode(BNO08X_P1, OUTPUT);
+    // digitalWrite(BNO08X_P0, HIGH);
+    // digitalWrite(BNO08X_P1, HIGH);
+    pinMode(BNO08X_P0, INPUT_PULLDOWN);
+    pinMode(BNO08X_P1, INPUT_PULLDOWN);
 
     // setup switch, neopixel, other
 
@@ -215,6 +218,10 @@ void ES20r::_setReports(bool configState[], int configRate[]){
 }
 
 void ES20r::record(void){
+    if(lpFlag) {
+        delay(1000);
+        lpFlag = false;
+    }
     if (_bno08x.wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
     }
@@ -430,4 +437,4 @@ void ES20r::calibrate() {
     }
 }
 
-void lpCallback(void){}
+void lpCallback(void){lpFlag = true;}
