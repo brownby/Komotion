@@ -232,24 +232,24 @@ void ES20r::_setReports(bool configState[], int configRate[]){
     }
     if (configState[1]){
         calConfig |= SH2_CAL_ACCEL;
-        if (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[0])) {
+        if (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
             Serial.println("could not enable linear acceleration (!)");
         }
     }
     if (configState[2]){
         calConfig |= SH2_CAL_GYRO;
-        if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[1])) {
+        if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
             Serial.println("could not enable gyroscope (!)"); 
         }
     }
     if (configState[3]){
         calConfig |= SH2_CAL_MAG;
-        if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[2])) {
+        if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
             Serial.println("could not enable magnetometer (!)");
         }
     }
     if (configState[4]){
-        if (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[3])) {
+        if (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
             Serial.println("could not enable rotation vector");
         }
     }
