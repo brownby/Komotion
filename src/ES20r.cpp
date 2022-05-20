@@ -84,21 +84,24 @@ void ES20r::begin(char config[5], bool saveBat){
 
     // look up desired rates for configuration
 
-    bool _dimenState[4] = {0,0,0,0};
+    bool _dimenState[5] = {0,0,0,0,0};
 
     for (int x = 0; x < strlen(_config); x++){
         switch(_config[x]){
             case 'a':
                 _dimenState[0] = 1;
                 break;
-            case 'g':
+            case 'l':
                 _dimenState[1] = 1;
                 break;
-            case 'm':
+            case 'g':
                 _dimenState[2] = 1;
                 break;
-            case 'r':
+            case 'm':
                 _dimenState[3] = 1;
+                break;
+            case 'r':
+                _dimenState[4] = 1;
                 break;
         }
     }
@@ -138,14 +141,14 @@ void ES20r::begin(char config[5], bool saveBat){
     memcpy(_dimenStates, _dimenStatesInit, sizeof(_dimenStates));
 
 
-    for (int x = 0; x < 15; x++){
+    for (int x = 0; x < 31; x++){
         int _countCompare = 0;
-        for (int y = 0; y < 4; y++){
+        for (int y = 0; y < 5; y++){
             if (_dimenStates[x][y] == _dimenState[y]){
                 _countCompare += 1;
             }
         }
-        if (_countCompare == 4){
+        if (_countCompare == 5){
             _setConfig = x;
             break;
         } 
@@ -228,18 +231,24 @@ void ES20r::_setReports(bool configState[], int configRate[]){
         }
     }
     if (configState[1]){
+        calConfig |= SH2_CAL_ACCEL;
+        if (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[0])) {
+            Serial.println("could not enable linear acceleration (!)");
+        }
+    }
+    if (configState[2]){
         calConfig |= SH2_CAL_GYRO;
         if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[1])) {
             Serial.println("could not enable gyroscope (!)"); 
         }
     }
-    if (configState[2]){
+    if (configState[3]){
         calConfig |= SH2_CAL_MAG;
         if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[2])) {
             Serial.println("could not enable magnetometer (!)");
         }
     }
-    if (configState[3]){
+    if (configState[4]){
         if (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[3])) {
             Serial.println("could not enable rotation vector");
         }
@@ -334,6 +343,21 @@ void ES20r::record(void){
               _dataString += String((micros()-_start_time)/us,3);
               _file.println(_dataString);
               break;
+            case SH2_LINEAR_ACCELERATION:
+                _accCal = _sensorValue.status;
+                _dataString += "l,";
+                _dataString += String(_sensorValue.un.linearAcceleration.x);
+                _dataString += ",";
+                _dataString += String(_sensorValue.un.linearAcceleration.y);
+                _dataString += ",";
+                _dataString += String(_sensorValue.un.linearAcceleration.z);
+                _dataString += ", ,";
+            //   _dataString += ",";
+            //   _dataString += String(_accCal);
+            //   _dataString += ",";
+                _dataString += String((micros()-_start_time)/us,3);
+                _file.println(_dataString);
+                break;
             case SH2_GYROSCOPE_CALIBRATED:
               _dataString += "g,";
               _dataString += String(_sensorValue.un.gyroscope.x);
@@ -419,6 +443,9 @@ void ES20r::calibrate() {
                 case SH2_ACCELEROMETER:
                     _accCal = _sensorValue.status;
                     break;
+                case SH2_LINEAR_ACCELERATION:
+                    _accCal = _sensorValue.status;
+                    break;
                 case SH2_GYROSCOPE_CALIBRATED:
                     _gyroCal = _sensorValue.status;
                     break;
@@ -428,13 +455,13 @@ void ES20r::calibrate() {
             }
         }
         int lowestCal = 4;
-        if(_dimenStates[_setConfig][0]) {
+        if(_dimenStates[_setConfig][0] || _dimenStates[_setConfig][1]) {
             if(_accCal < lowestCal) lowestCal = _accCal;
         }
-        if(_dimenStates[_setConfig][1]) {
+        if(_dimenStates[_setConfig][2]) {
             if(_gyroCal < lowestCal) lowestCal = _gyroCal;
         }
-        if(_dimenStates[_setConfig][2]) {
+        if(_dimenStates[_setConfig][3]) {
             if(_magCal < lowestCal) lowestCal = _magCal;
         }
 
