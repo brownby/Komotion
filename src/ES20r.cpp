@@ -151,7 +151,7 @@ void ES20r::begin(char config[5], bool saveBat){
         } 
     }
                                    
-    int _dimenRatesInit[31][5] = {{{400,0,0,0,0}, 
+    int _dimenRatesInit[31][5] = {{400,0,0,0,0}, 
                                    {0,200,0,0,0},
                                    {125,100,0,0,0},
                                    {0,0,250,0,0},
