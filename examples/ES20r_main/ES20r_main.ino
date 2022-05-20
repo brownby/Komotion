@@ -3,7 +3,7 @@
    Created by Bejamin Y. Brown and J. Evan Smith
    Active Learning Labs
 
-   last revised 28 April 2022
+   last revised 20 May 2022
 */
 
 #include "ES20r.h"
@@ -19,10 +19,11 @@
 */
 
 ES20r sensor;
-char configure[] = "agmr"; // enable as required
+char configure[] = "agr"; // enable as required
 
 /*
-   a = accelerometer (angular)
+   a = accelerometer
+   l = linear acceleration (gravity removed)
    g = gyroscope (angular velocity) 
    m = magnetometer (B fields)
    r = rotation vector (orientation)
