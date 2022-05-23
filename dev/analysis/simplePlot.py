@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import math
 
 # import data from file
-fileName = "data08.csv"
+fileName = "data12.csv"
 config = "agr"
 
 def euler_from_quaternion(w, i, j, k):
@@ -98,48 +98,100 @@ curRow = 0
 curCol = 0
 
 if('a' in config):
-    axs[curRow, curCol].plot(a[:,-1], a[:,0], 'r')
-    axs[curRow, curCol].plot(a[:,-1], a[:,1], 'y')
-    axs[curRow, curCol].plot(a[:,-1], a[:,2], 'b')
-    axs[curRow, curCol].legend(["a_x", "a_y", "a_z"])
-    axs[curRow, curCol].set_xlabel("time (s)")
-    axs[curRow, curCol].set_ylabel("acceleration (m/s2)")
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(a[:,-1], a[:,0], 'r')
+        axs[curRow, curCol].plot(a[:,-1], a[:,1], 'y')
+        axs[curRow, curCol].plot(a[:,-1], a[:,2], 'b')
+        axs[curRow, curCol].legend(["a_x", "a_y", "a_z"])
+        axs[curRow, curCol].set_xlabel("time (s)")
+        axs[curRow, curCol].set_ylabel("acceleration (m/s2)")
+    else:
+        axs[curCol].plot(a[:,-1], a[:,0], 'r')
+        axs[curCol].plot(a[:,-1], a[:,1], 'y')
+        axs[curCol].plot(a[:,-1], a[:,2], 'b')
+        axs[curCol].legend(["a_x", "a_y", "a_z"])
+        axs[curCol].set_xlabel("time (s)")
+        axs[curCol].set_ylabel("acceleration (m/s2)")
+    curCol += 1
+    if(curCol > cols - 1):
+        curCol = 0
+        curRow +=1
+
+if('l' in config):
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(l[:,-1], l[:,0], 'r')
+        axs[curRow, curCol].plot(l[:,-1], l[:,1], 'y')
+        axs[curRow, curCol].plot(l[:,-1], l[:,2], 'b')
+        axs[curRow, curCol].legend(["l_x", "l_y", "l_z"])
+        axs[curRow, curCol].set_xlabel("time (s)")
+        axs[curRow, curCol].set_ylabel("acceleration (m/s2)")
+    else:
+        axs[curCol].plot(l[:,-1], l[:,0], 'r')
+        axs[curCol].plot(l[:,-1], l[:,1], 'y')
+        axs[curCol].plot(l[:,-1], l[:,2], 'b')
+        axs[curCol].legend(["l_x", "l_y", "l_z"])
+        axs[curCol].set_xlabel("time (s)")
+        axs[curCol].set_ylabel("acceleration (m/s2)")
     curCol += 1
     if(curCol > cols - 1):
         curCol = 0
         curRow +=1
 
 if('g' in config):
-    axs[curRow, curCol].plot(g[:,-1], g[:,0], 'r')
-    axs[curRow, curCol].plot(g[:,-1], g[:,1], 'y')
-    axs[curRow, curCol].plot(g[:,-1], g[:,2], 'b')
-    axs[curRow, curCol].legend(["g_x", "g_y", "g_z"])
-    axs[curRow, curCol].set_xlabel("time (s)")
-    axs[curRow, curCol].set_ylabel("angular velocity (rad/s)")
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(g[:,-1], g[:,0], 'r')
+        axs[curRow, curCol].plot(g[:,-1], g[:,1], 'y')
+        axs[curRow, curCol].plot(g[:,-1], g[:,2], 'b')
+        axs[curRow, curCol].legend(["g_x", "g_y", "g_z"])
+        axs[curRow, curCol].set_xlabel("time (s)")
+        axs[curRow, curCol].set_ylabel("angular velocity (rad/s)")
+    else:
+        axs[curCol].plot(g[:,-1], g[:,0], 'r')
+        axs[curCol].plot(g[:,-1], g[:,1], 'y')
+        axs[curCol].plot(g[:,-1], g[:,2], 'b')
+        axs[curCol].legend(["g_x", "g_y", "g_z"])
+        axs[curCol].set_xlabel("time (s)")
+        axs[curCol].set_ylabel("angular velocity (rad/s)")
     curCol += 1
     if(curCol > cols - 1):
         curCol = 0
         curRow +=1
 
 if('m' in config):
-    axs[curRow, curCol].plot(m[:,-1], m[:,0], 'r')
-    axs[curRow, curCol].plot(m[:,-1], m[:,1], 'y')
-    axs[curRow, curCol].plot(m[:,-1], m[:,2], 'b')
-    axs[curRow, curCol].legend(["m_x", "m_y", "m_z"])
-    axs[curRow, curCol].set_xlabel("time (s)")
-    axs[curRow, curCol].set_ylabel("magnetic field (uT)")
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(m[:,-1], m[:,0], 'r')
+        axs[curRow, curCol].plot(m[:,-1], m[:,1], 'y')
+        axs[curRow, curCol].plot(m[:,-1], m[:,2], 'b')
+        axs[curRow, curCol].legend(["m_x", "m_y", "m_z"])
+        axs[curRow, curCol].set_xlabel("time (s)")
+        axs[curRow, curCol].set_ylabel("magnetic field (uT)")
+    else:
+        axs[curCol].plot(m[:,-1], m[:,0], 'r')
+        axs[curCol].plot(m[:,-1], m[:,1], 'y')
+        axs[curCol].plot(m[:,-1], m[:,2], 'b')
+        axs[curCol].legend(["m_x", "m_y", "m_z"])
+        axs[curCol].set_xlabel("time (s)")
+        axs[curCol].set_ylabel("magnetic field (uT)")
     curCol += 1
     if(curCol > cols - 1):
         curCol = 0
         curRow +=1
 
 if('r' in config):
-    axs[curRow, curCol].plot(r_euler[:,-1], r_euler[:,0], 'r')
-    axs[curRow, curCol].plot(r_euler[:,-1], r_euler[:,1], 'y')
-    axs[curRow, curCol].plot(r_euler[:,-1], r_euler[:,2], 'b')
-    axs[curRow, curCol].legend(["roll", "pitch", "yaw"])
-    axs[curRow, curCol].set_xlabel("time (s)")
-    axs[curRow, curCol].set_ylabel("Euler angles (deg)")
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(r_euler[:,-1], r_euler[:,0], 'r')
+        axs[curRow, curCol].plot(r_euler[:,-1], r_euler[:,1], 'y')
+        axs[curRow, curCol].plot(r_euler[:,-1], r_euler[:,2], 'b')
+        axs[curRow, curCol].legend(["roll", "pitch", "yaw"])
+        axs[curRow, curCol].set_xlabel("time (s)")
+        axs[curRow, curCol].set_ylabel("Euler angles (deg)")
+    else:
+        axs[curCol].plot(r_euler[:,-1], r_euler[:,0], 'r')
+        axs[curCol].plot(r_euler[:,-1], r_euler[:,1], 'y')
+        axs[curCol].plot(r_euler[:,-1], r_euler[:,2], 'b')
+        axs[curCol].legend(["roll", "pitch", "yaw"])
+        axs[curCol].set_xlabel("time (s)")
+        axs[curCol].set_ylabel("Euler angles (deg)")
     curCol += 1
     if(curCol > cols - 1):
         curCol = 0
@@ -148,22 +200,42 @@ if('r' in config):
 # Plot sample linearity
 legendArr = []
 if('a' in config):
-    axs[curRow, curCol].plot(a[:,-1], list(range(0, len(a), 1)), 'r')
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(a[:,-1], list(range(0, len(a), 1)), 'r')
+    else:
+        axs[curCol].plot(a[:,-1], list(range(0, len(a), 1)), 'r')
     legendArr.append('a')
 if('g' in config):
-    axs[curRow, curCol].plot(g[:,-1], list(range(0, len(g), 1)), 'y')
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(g[:,-1], list(range(0, len(g), 1)), 'y')
+    else:
+        axs[curCol].plot(g[:,-1], list(range(0, len(g), 1)), 'y')
     legendArr.append('g')
 if('m' in config):
-    axs[curRow, curCol].plot(m[:,-1], list(range(0, len(m), 1)), 'b')
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(m[:,-1], list(range(0, len(m), 1)), 'b')
+    else:
+        axs[curCol].plot(m[:,-1], list(range(0, len(m), 1)), 'b')
     legendArr.append('m')
 if('r' in config):
-    axs[curRow, curCol].plot(r[:,-1], list(range(0, len(r), 1)), 'g')
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(r[:,-1], list(range(0, len(r), 1)), 'g')
+    else:
+        axs[curCol].plot(r[:,-1], list(range(0, len(r), 1)), 'g')
     legendArr.append('r')
 if('l' in config):
-    axs[curRow, curCol].plot(l[:,-1], list(range(0, len(l), 1)), 'w')
+    if (numPlots > 2):
+        axs[curRow, curCol].plot(l[:,-1], list(range(0, len(l), 1)), 'w')
+    else:
+        axs[curCol].plot(l[:,-1], list(range(0, len(l), 1)), 'w')
     legendArr.append('l')
-axs[curRow, curCol].legend(legendArr)
-axs[curRow, curCol].set_xlabel("time (s)")
-axs[curRow, curCol].set_ylabel("sample count")
+if (numPlots > 2):
+    axs[curRow, curCol].legend(legendArr)
+    axs[curRow, curCol].set_xlabel("time (s)")
+    axs[curRow, curCol].set_ylabel("sample count")
+else:
+    axs[curCol].legend(legendArr)
+    axs[curCol].set_xlabel("time (s)")
+    axs[curCol].set_ylabel("sample count")
 
 plt.show()

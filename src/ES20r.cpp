@@ -253,6 +253,7 @@ void ES20r::_setReports(bool configState[], int configRate[]){
             Serial.println("could not enable rotation vector");
         }
     }
+    _bno08x.getSensorEvent(&_sensorValue); // need this line to avoid a null pointer exception on the next line
     if(!sh2_setCalConfig(calConfig)) {Serial.print("succesfully set dynamic cal: "); Serial.println(calConfig);}
 }
 
