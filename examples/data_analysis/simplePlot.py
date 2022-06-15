@@ -1,7 +1,7 @@
 """
    Simple plotter
-   for ES20r sensing platform
-   last modified 11 May 2022
+   for Komotion
+   last modified 15 June 2022
 
    Active Learning Labs, Electrical Engineering
    https://www.seas.harvard.edu/active-learning-labs

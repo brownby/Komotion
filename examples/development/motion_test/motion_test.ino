@@ -1,5 +1,5 @@
 /*
-  Data logger for ES 20r: Physics of Sports
+  Komotion, data logger for ES 20r: Physics of Sports
 
   modified 13 May 2022
   by J. Evan Smith

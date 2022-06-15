@@ -1,5 +1,5 @@
 /*
-  Data logger for ES 20r: Physics of Sports
+  Komotion, data logger for ES 20r: Physics of Sports
 
   Writes requested reports to a text file (csv)
   and allows for configuration of requested sample rate

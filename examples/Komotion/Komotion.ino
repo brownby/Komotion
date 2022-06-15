@@ -8,7 +8,7 @@
 #include <Komotion.h>
 
 Komotion sensor;
-char configure[] = "agr"; // enable as required
+char configure[] = "lgr"; // enable as required
 
 /*
    a = accelerometer
