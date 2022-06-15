@@ -6,4 +6,5 @@ Directions:
 2. Upload Komotion.ino in examples. Change the "configure" string to turn on and off different sensor reports.
 3. Move the switch from standby (STDBY) to record (REC), and start recording data!
 
-![Komotion](/img/komotionMain.png?raw=true "Form factor")
+![Komotion](/img/komotionMain.png "Form factor")
+![Komotion Switch](/img/komotionSwitch.png "Recording Switch")
