@@ -1,4 +1,4 @@
-ES20r    KEYWORD3
-begin   KEYWORD2
-record  KEYWORD2
-configure   KEYWORD2
+Komotion	KEYWORD1
+begin	KEYWORD2
+record	KEYWORD2
+configure	KEYWORD2
