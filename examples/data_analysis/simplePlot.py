@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import math
 
 # import data from file
-fileName = "data12.csv"
+fileName = "sample_data.csv"
 config = "agr"
 
 def euler_from_quaternion(w, i, j, k):
