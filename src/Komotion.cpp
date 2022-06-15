@@ -1,5 +1,5 @@
 /*
-   ES20r.cpp - Library for ES20r Sensing Platform
+   Komotion.cpp - Library for Komotion, the Komotion Sensing Platform
    Created by J. Evan Smith and Bejamin Y. Brown
    Active Learning Labs
 
@@ -7,17 +7,17 @@
 */
 
 #include "Arduino.h"
-#include "ES20r.h"
+#include "Komotion.h"
 
 SdFat _sd;
 SdFile _file;
 Adafruit_BNO08x _bno08x(BNO08X_RESET);
-Adafruit_NeoPixel _pixel(1, ES20r_NEOPIX, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel _pixel(1, KOMOTION_NEOPIX, NEO_GRB + NEO_KHZ800);
 bool lpFlag = false;
 
-ES20r::ES20r(){}
+Komotion::Komotion(){}
 
-void ES20r::begin(char config[5], bool saveBat){
+void Komotion::begin(char config[5], bool saveBat){
     
     memcpy(_config, config, sizeof(_config));
     _saveBat = saveBat;
@@ -41,11 +41,11 @@ void ES20r::begin(char config[5], bool saveBat){
 
     // setup switch, neopixel, other
 
-    pinMode(ES20r_SWITCH, INPUT_PULLUP);
-    pinMode(ES20r_SD_CD, INPUT_PULLUP);
+    pinMode(KOMOTION_SWITCH, INPUT_PULLUP);
+    pinMode(KOMOTION_SD_CD, INPUT_PULLUP);
 
     if (!_saveBat){
-        pinMode(ES20r_NEOPIX, OUTPUT);
+        pinMode(KOMOTION_NEOPIX, OUTPUT);
         _pixNum = 0;
         _pixel.begin();
         _pixel.clear();
@@ -58,9 +58,9 @@ void ES20r::begin(char config[5], bool saveBat){
 
     Serial.print("attempting to setup SD card...");
 
-    _sd_cs = ES20r_SD_CS;
+    _sd_cs = KOMOTION_SD_CS;
     if (!_sd.begin(_sd_cs, SD_SCK_MHZ(12))) {
-        while(!digitalRead(ES20r_SD_CD)){
+        while(!digitalRead(KOMOTION_SD_CD)){
             _pixel.clear();
             _pixel.setPixelColor(_pixNum,0,0,25);
             _pixel.show();
@@ -193,7 +193,7 @@ void ES20r::begin(char config[5], bool saveBat){
     _setReports(_dimenStates[_setConfig],_dimenRates[_setConfig]);
     _recording = false; 
 
-    LowPower.attachInterruptWakeup(ES20r_SWITCH, lpCallback, FALLING);
+    LowPower.attachInterruptWakeup(KOMOTION_SWITCH, lpCallback, FALLING);
 
     _accCal = 0;
     _gyroCal = 0;
@@ -207,7 +207,7 @@ void ES20r::begin(char config[5], bool saveBat){
     calibrate();
 }
 
-void ES20r::_bnoDetails(void){
+void Komotion::_bnoDetails(void){
     for (int n = 0; n < _bno08x.prodIds.numEntries; n++) {
         Serial.print("Part ");
         Serial.print(_bno08x.prodIds.entry[n].swPartNumber);
@@ -222,7 +222,7 @@ void ES20r::_bnoDetails(void){
     }
 }
 
-void ES20r::_setReports(bool configState[], int configRate[]){
+void Komotion::_setReports(bool configState[], int configRate[]){
     uint8_t calConfig = 0;
     if (configState[0]){
         calConfig |= SH2_CAL_ACCEL;
@@ -257,7 +257,7 @@ void ES20r::_setReports(bool configState[], int configRate[]){
     if(!sh2_setCalConfig(calConfig)) {Serial.print("succesfully set dynamic cal: "); Serial.println(calConfig);}
 }
 
-void ES20r::record(void){
+void Komotion::record(void){
     if(lpFlag) {
         delay(1000);
         lpFlag = false;
@@ -265,11 +265,11 @@ void ES20r::record(void){
     if (_bno08x.wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
     }
-    if(!digitalRead(ES20r_SWITCH)){
+    if(!digitalRead(KOMOTION_SWITCH)){
         if(!_recording){
             _recording = !_recording;
 
-            while(!digitalRead(ES20r_SD_CD)){
+            while(!digitalRead(KOMOTION_SD_CD)){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,0,25);
                 _pixel.show();
@@ -278,7 +278,7 @@ void ES20r::record(void){
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
                 delay(1000);
-                if(digitalRead(ES20r_SWITCH)){
+                if(digitalRead(KOMOTION_SWITCH)){
                     _recording = !_recording;
                     return;
                 }
@@ -436,8 +436,8 @@ void ES20r::record(void){
     }
 }
 
-void ES20r::calibrate() {
-    while(digitalRead(ES20r_SWITCH)) { // keep calibrating until record switch is switched to record
+void Komotion::calibrate() {
+    while(digitalRead(KOMOTION_SWITCH)) { // keep calibrating until record switch is switched to record
         if (!_bno08x.getSensorEvent(&_sensorValue)){continue;}
         else {
             switch (_sensorValue.sensorId) {
