@@ -36,8 +36,10 @@ void Komotion::begin(char config[5], bool saveBat){
 
     pinMode(BNO08X_P0, OUTPUT);
     pinMode(BNO08X_P1, OUTPUT);
+    pinMode(BNO08X_ONOFF, OUTPUT);
     digitalWrite(BNO08X_P0, HIGH);
     digitalWrite(BNO08X_P1, HIGH);
+    digitalWrite(BNO08X_ONOFF, LOW); // turn on device
 
     // setup switch, neopixel, other
 
@@ -259,6 +261,8 @@ void Komotion::_setReports(bool configState[], int configRate[]){
 
 void Komotion::record(void){
     if(lpFlag) {
+        // TODO: test if this is all we need to do, believe it is as _setReports should get triggered again
+        digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
         lpFlag = false;
     }
@@ -433,6 +437,7 @@ void Komotion::record(void){
             Serial.println("in standby");
         }
         LowPower.sleep();
+        digitalWrite(BNO08X_ONOFF, HIGH); // turn off BNO
     }
 }
 
@@ -495,4 +500,7 @@ void Komotion::calibrate() {
     }
 }
 
-void lpCallback(void){lpFlag = true;}
+void lpCallback(void)
+{
+    lpFlag = true;
+}
