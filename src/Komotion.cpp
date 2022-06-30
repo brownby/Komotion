@@ -436,8 +436,8 @@ void Komotion::record(void){
             }
             Serial.println("in standby");
         }
-        LowPower.sleep();
         digitalWrite(BNO08X_ONOFF, HIGH); // turn off BNO
+        LowPower.sleep();
     }
 }
 
