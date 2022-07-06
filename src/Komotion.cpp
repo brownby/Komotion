@@ -228,31 +228,46 @@ void Komotion::_setReports(bool configState[], int configRate[]){
     uint8_t calConfig = 0;
     if (configState[0]){
         calConfig |= SH2_CAL_ACCEL;
-        if (!_bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
+        // if (!_bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
+        while (!_bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
             Serial.println("could not enable accelerometer (!)");
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+            delay(100);
         }
     }
     if (configState[1]){
         calConfig |= SH2_CAL_ACCEL;
-        if (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
+        // if (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
+        while (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
             Serial.println("could not enable linear acceleration (!)");
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+            delay(100);
         }
     }
     if (configState[2]){
         calConfig |= SH2_CAL_GYRO;
-        if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
+        // if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
+        while (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
             Serial.println("could not enable gyroscope (!)"); 
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+            delay(100);
         }
     }
     if (configState[3]){
         calConfig |= SH2_CAL_MAG;
-        if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
+        // if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
+        while (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
             Serial.println("could not enable magnetometer (!)");
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+            delay(100);
         }
     }
     if (configState[4]){
-        if (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
+        // if (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
+        while (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
             Serial.println("could not enable rotation vector");
+            digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
+            delay(100);
         }
     }
     _bno08x.getSensorEvent(&_sensorValue); // need this line to avoid a null pointer exception on the next line
@@ -261,7 +276,12 @@ void Komotion::_setReports(bool configState[], int configRate[]){
 
 void Komotion::record(void){
     if(lpFlag) {
-        // TODO: test if this is all we need to do, believe it is as _setReports should get triggered again
+        // reset BNO pins that were pulled down for low power back to appropriate state
+        digitalWrite(BNO08X_P0, HIGH);
+        digitalWrite(BNO08X_P1, HIGH);
+        digitalWrite(BNO08X_RESET, HIGH);
+        pinMode(BNO08X_INT, INPUT_PULLUP);
+
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
         lpFlag = false;
@@ -437,6 +457,14 @@ void Komotion::record(void){
             Serial.println("in standby");
         }
         digitalWrite(BNO08X_ONOFF, HIGH); // turn off BNO
+
+        // Pull all BNO pins low (leaving MOSI, MISO, CS, and SCK alone for now)
+        digitalWrite(BNO08X_P0, LOW);
+        digitalWrite(BNO08X_P1, LOW);
+        digitalWrite(BNO08X_RESET, LOW);
+        
+        pinMode(BNO08X_INT, OUTPUT);
+        digitalWrite(BNO08X_INT, LOW);
         LowPower.sleep();
     }
 }
