@@ -534,7 +534,7 @@ static bool spihal_wait_for_int(void) {
     // Serial.print(".");
     delay(1);
   }
-  // Serial.println("Timed out!");
+  Serial.println("Timed out (reset)!");
   hal_hardwareReset();
 
   return false;
