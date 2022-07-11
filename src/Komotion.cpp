@@ -267,19 +267,20 @@ void Komotion::_setReports(bool configState[], int configRate[]){
 void Komotion::record(void){
     if(lpFlag) {
         // Reset BNO pins that were pulled down for low power back to appropriate state
+        pinMode(BNO08X_P0, OUTPUT);
+        pinMode(BNO08X_P1, OUTPUT);
         pinMode(BNO08X_RESET, OUTPUT);
+        pinMode(BNO08X_INT, INPUT_PULLUP);
+
         digitalWrite(BNO08X_P0, HIGH);
         digitalWrite(BNO08X_P1, HIGH);
         digitalWrite(BNO08X_RESET, HIGH);
-        pinMode(BNO08X_INT, INPUT_PULLUP);
 
         delay(200);
 
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
         lpFlag = false;
-
-        while(!Serial);
     }
     if (_bno08x.wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
@@ -476,8 +477,6 @@ void Komotion::record(void){
         pinMode(BNO08X_P1, INPUT_PULLDOWN);
         pinMode(BNO08X_RESET, INPUT_PULLDOWN);
         pinMode(BNO08X_INT, INPUT_PULLDOWN);
-
-        Serial.end();
 
         LowPower.sleep();
     }
