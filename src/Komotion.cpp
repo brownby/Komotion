@@ -304,8 +304,8 @@ void Komotion::record(void){
             // define filename, given existing files
 
             uint8_t _fileNameSize = sizeof(baseName) - 1;
-            char _fileName[13] = baseName "00.csv";
-            _fileIndex = 0;
+            char _fileName[13] = baseName "01.csv";
+            _fileIndex = 1;
 
             _sd.begin(_sd_cs, SD_SCK_MHZ(12)); 
 
