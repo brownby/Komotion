@@ -278,6 +278,8 @@ void Komotion::record(void){
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
         lpFlag = false;
+
+        while(!Serial);
     }
     if (_bno08x.wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
@@ -432,7 +434,23 @@ void Komotion::record(void){
             _pixel.clear();
             _pixel.show();
             delay(500);
-            for (int x = 0; x < _fileIndex; x++){
+
+            // Long blinks for every ten
+            for (int i = 0; i < _fileIndex / 10; i++)
+            {
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,25,0);
+                _pixel.show();
+                delay(600);  
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,0);
+                _pixel.show();  
+                delay(600);
+            }
+
+            // Short blinks for ones
+            for (int x = 0; x < _fileIndex % 10; x++) 
+            {
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,0,25,0);
                 _pixel.show();
@@ -458,6 +476,8 @@ void Komotion::record(void){
         pinMode(BNO08X_P1, INPUT_PULLDOWN);
         pinMode(BNO08X_RESET, INPUT_PULLDOWN);
         pinMode(BNO08X_INT, INPUT_PULLDOWN);
+
+        Serial.end();
 
         LowPower.sleep();
     }
