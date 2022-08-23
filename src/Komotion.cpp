@@ -484,6 +484,10 @@ void Komotion::record(void){
 
 void Komotion::calibrate() {
     while(digitalRead(KOMOTION_SWITCH)) { // keep calibrating until record switch is switched to record
+        if (_bno08x.wasReset()){
+            _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
+        }
+        
         if (!_bno08x.getSensorEvent(&_sensorValue)){continue;}
         else {
             switch (_sensorValue.sensorId) {
