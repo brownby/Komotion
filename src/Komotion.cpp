@@ -266,17 +266,20 @@ void Komotion::_setReports(bool configState[], int configRate[]){
 
 void Komotion::record(void){
     if(lpFlag) {
+
+        // 0.2.2: Removing these pin toggles until empty file bug is resolved
+
         // Reset BNO pins that were pulled down for low power back to appropriate state
-        pinMode(BNO08X_P0, OUTPUT);
-        pinMode(BNO08X_P1, OUTPUT);
-        pinMode(BNO08X_RESET, OUTPUT);
-        pinMode(BNO08X_INT, INPUT_PULLUP);
+        // pinMode(BNO08X_P0, OUTPUT);
+        // pinMode(BNO08X_P1, OUTPUT);
+        // pinMode(BNO08X_RESET, OUTPUT);
+        // pinMode(BNO08X_INT, INPUT_PULLUP);
 
-        digitalWrite(BNO08X_P0, HIGH);
-        digitalWrite(BNO08X_P1, HIGH);
-        digitalWrite(BNO08X_RESET, HIGH);
+        // digitalWrite(BNO08X_P0, HIGH);
+        // digitalWrite(BNO08X_P1, HIGH);
+        // digitalWrite(BNO08X_RESET, HIGH);
 
-        delay(200);
+        // delay(200);
 
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
@@ -472,11 +475,13 @@ void Komotion::record(void){
 
         delay(200);
 
+        // 0.2.2: Removing these pin toggles until empty file bug is resolved
+
         // Pull all BNO pins low (leaving MOSI, MISO, CS, and SCK alone for now)
-        pinMode(BNO08X_P0, INPUT_PULLDOWN);
-        pinMode(BNO08X_P1, INPUT_PULLDOWN);
-        pinMode(BNO08X_RESET, INPUT_PULLDOWN);
-        pinMode(BNO08X_INT, INPUT_PULLDOWN);
+        // pinMode(BNO08X_P0, INPUT_PULLDOWN);
+        // pinMode(BNO08X_P1, INPUT_PULLDOWN);
+        // pinMode(BNO08X_RESET, INPUT_PULLDOWN);
+        // pinMode(BNO08X_INT, INPUT_PULLDOWN);
 
         LowPower.sleep();
     }
