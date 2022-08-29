@@ -293,7 +293,7 @@ void Komotion::record(void){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
         resetCount++;
         
-        // v0.2.3: BNO reset more than 10 times, probably as a result of SPI timeouts. Blink purple to indicate to use to reset the device
+        // v0.2.3: BNO reset more than 5 times, probably as a result of SPI timeouts. Blink purple to indicate to users to reset the device
         if (resetCount >= 5)
         {
             while (true)
@@ -333,20 +333,6 @@ void Komotion::record(void){
             uint8_t _fileNameSize = sizeof(baseName) - 1;
             char _fileName[13] = baseName "01.csv";
             _fileIndex = 1;
-
-            if (!_sd.begin(_sd_cs, SD_SCK_MHZ(12))) {
-                while(!digitalRead(KOMOTION_SD_CD)){
-                    _pixel.clear();
-                    _pixel.setPixelColor(_pixNum,0,0,25);
-                    _pixel.show();
-                    delay(100);  
-                    _pixel.clear();
-                    _pixel.setPixelColor(_pixNum,0,0,0);
-                    _pixel.show();  
-                    delay(1000);
-                }
-                _sd.begin(_sd_cs, SD_SCK_MHZ(12));
-            } 
 
             while (_sd.exists(_fileName)) {
                 if (_fileName[_fileNameSize + 1] != '9') {
