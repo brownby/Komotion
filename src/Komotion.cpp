@@ -14,6 +14,7 @@ SdFile _file;
 Adafruit_BNO08x _bno08x(BNO08X_RESET);
 Adafruit_NeoPixel _pixel(1, KOMOTION_NEOPIX, NEO_GRB + NEO_KHZ800);
 bool lpFlag = false;
+uint8_t resetCount = 0;
 
 Komotion::Komotion(){}
 
@@ -281,12 +282,32 @@ void Komotion::record(void){
 
         // delay(200);
 
+        // Serial.begin(115200);
+        // while(!Serial){delay(10);}
+
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
         lpFlag = false;
     }
     if (_bno08x.wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
+        resetCount++;
+        
+        // v0.2.3: BNO reset more than 10 times, probably as a result of SPI timeouts. Blink purple to indicate to use to reset the device
+        if (resetCount >= 5)
+        {
+            while (true)
+            {
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,25,0,25);
+                _pixel.show();
+                delay(100);  
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,0);
+                _pixel.show();  
+                delay(1000);
+            }
+        }
     }
     if(!digitalRead(KOMOTION_SWITCH)){
         if(!_recording){
@@ -313,7 +334,19 @@ void Komotion::record(void){
             char _fileName[13] = baseName "01.csv";
             _fileIndex = 1;
 
-            _sd.begin(_sd_cs, SD_SCK_MHZ(12)); 
+            if (!_sd.begin(_sd_cs, SD_SCK_MHZ(12))) {
+                while(!digitalRead(KOMOTION_SD_CD)){
+                    _pixel.clear();
+                    _pixel.setPixelColor(_pixNum,0,0,25);
+                    _pixel.show();
+                    delay(100);  
+                    _pixel.clear();
+                    _pixel.setPixelColor(_pixNum,0,0,0);
+                    _pixel.show();  
+                    delay(1000);
+                }
+                _sd.begin(_sd_cs, SD_SCK_MHZ(12));
+            } 
 
             while (_sd.exists(_fileName)) {
                 if (_fileName[_fileNameSize + 1] != '9') {
@@ -339,7 +372,17 @@ void Komotion::record(void){
                 }
             }
             Serial.println(_fileName);
-            _file.open(_fileName, FILE_WRITE);    
+            while(!_file.open(_fileName, FILE_WRITE))
+            {
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,25);
+                _pixel.show();
+                delay(100);  
+                _pixel.clear();
+                _pixel.setPixelColor(_pixNum,0,0,0);
+                _pixel.show();  
+                delay(1000);
+            }
             if (!_saveBat){
                 _pixel.clear();
                 _pixel.setPixelColor(_pixNum,25,0,0);
@@ -482,6 +525,8 @@ void Komotion::record(void){
         // pinMode(BNO08X_P1, INPUT_PULLDOWN);
         // pinMode(BNO08X_RESET, INPUT_PULLDOWN);
         // pinMode(BNO08X_INT, INPUT_PULLDOWN);
+
+        // Serial.end();
 
         LowPower.sleep();
     }
