@@ -528,6 +528,8 @@ void Komotion::record(void){
 
         // Serial.end();
 
+        resetCount = 0;
+
         LowPower.sleep();
     }
 }
