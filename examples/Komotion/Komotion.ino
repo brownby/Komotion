@@ -1,8 +1,8 @@
 /*
    Komotion.ino - Primary Sketch for Komotion, the Motion Sensing Platform for ES20r
-   Created by Bejamin Y. Brown and J. Evan Smith
+   Created by Benjamin Y. Brown and J. Evan Smith
 
-   last revised 15 June 2022
+   last revised 6 September 2022
 */
 
 #include <Komotion.h>
