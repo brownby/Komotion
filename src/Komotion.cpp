@@ -210,7 +210,7 @@ void Komotion::begin(char config[5], bool saveBat){
         digitalWrite(LED_BUILTIN, LOW); // indicate end of begin()
     }
 
-    calibrate();
+    calibrate();    
 }
 
 void Komotion::_bnoDetails(void){
@@ -640,13 +640,13 @@ void Komotion::calibrate() {
                 delay(100);
             }
 
-            reset_count = 0;
+            resetCount = 0;
 
             return;
         }
     }
 
-    reset_count = 0;
+    resetCount = 0;
 }
 
 void lpCallback(void)
