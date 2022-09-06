@@ -200,8 +200,6 @@ void Komotion::begin(char config[5], bool saveBat){
 
     LowPower.attachInterruptWakeup(KOMOTION_SWITCH, lpCallback, FALLING);
 
-    calibrate();
-
     _accCal = 0;
     _gyroCal = 0;
     _magCal = 0;
@@ -211,6 +209,8 @@ void Komotion::begin(char config[5], bool saveBat){
         _pixel.show();
         digitalWrite(LED_BUILTIN, LOW); // indicate end of begin()
     }
+
+    calibrate();
 }
 
 void Komotion::_bnoDetails(void){
