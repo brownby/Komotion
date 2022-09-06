@@ -270,6 +270,9 @@ void Komotion::_setReports(bool configState[], int configRate[]){
 void Komotion::record(void){
     if(lpFlag) {
 
+        // Serial.begin(115200);
+        // while(!Serial){delay(10);}
+
         // 0.2.2: Removing these pin toggles until empty file bug is resolved
 
         // Reset BNO pins that were pulled down for low power back to appropriate state
@@ -282,13 +285,26 @@ void Komotion::record(void){
         // digitalWrite(BNO08X_P1, HIGH);
         // digitalWrite(BNO08X_RESET, HIGH);
 
-        // delay(200);
+        // 0.2.4: Add these toggles back and initialize _bno08x object
 
-        // Serial.begin(115200);
-        // while(!Serial){delay(10);}
+        // Reset pins that were pulled low via OUTPUT
+        // INT and SPI pins are covered by BNO init methods
+        digitalWrite(BNO08X_P0, HIGH);
+        digitalWrite(BNO08X_P1, HIGH);
+        digitalWrite(BNO08X_RESET, HIGH);
+
+        delay(200);
 
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
+
+        _bno08x = new Adafruit_BNO08x(BNO08X_RESET);
+
+        if (!_bno08x->begin_SPI(BNO08X_CS, BNO08X_INT)) {
+            Serial.println(" failed to initialize BNO08x");
+            while(1) {delay(10);}
+        }
+
         lpFlag = false;
     }
     if (_bno08x->wasReset()){
@@ -508,12 +524,36 @@ void Komotion::record(void){
 
         // 0.2.2: Removing these pin toggles until empty file bug is resolved
 
-        // Pull all BNO pins low (leaving MOSI, MISO, CS, and SCK alone for now)
+        // Pull all BNO pins low via pulldowns
         // pinMode(BNO08X_P0, INPUT_PULLDOWN);
         // pinMode(BNO08X_P1, INPUT_PULLDOWN);
         // pinMode(BNO08X_RESET, INPUT_PULLDOWN);
         // pinMode(BNO08X_INT, INPUT_PULLDOWN);
+        // pinMode(23, INPUT_PULLDOWN); // MOSI
+        // pinMode(22, INPUT_PULLDOWN); // MISO
+        // pinMode(24, INPUT_PULLDOWN); // SCK
+        // pinMode(A4, INPUT_PULLDOWN); // CS
 
+        // 0.2.4: Add pin toggles back, but this time toggle EVERYTHING connected to the BNO, and delete _bno08x object
+
+        sh2_close();
+        delete _bno08x;
+
+        // Pull all BNO pins low via OUTPUT 
+        pinMode(23, OUTPUT); // MOSI
+        pinMode(22, OUTPUT); // MISO
+        pinMode(24, OUTPUT); // SCK
+        pinMode(A4, OUTPUT); // CS
+        pinMode(BNO08X_INT, OUTPUT);
+        digitalWrite(BNO08X_P0, LOW);
+        digitalWrite(BNO08X_P1, LOW);
+        digitalWrite(BNO08X_RESET, LOW);
+        digitalWrite(BNO08X_INT, LOW);
+        digitalWrite(23, LOW); 
+        digitalWrite(22, LOW);
+        digitalWrite(24, LOW);
+        digitalWrite(A4, LOW);
+        
         // Serial.end();
 
         resetCount = 0;

@@ -145,6 +145,7 @@ bool Adafruit_BNO08x::begin_SPI(uint8_t cs_pin, uint8_t int_pin,
                                    SPI_MODE3,             // data mode
                                    theSPI);
   if (!spi_dev->begin()) {
+    Serial.println("SPI init failed");
     return false;
   }
 
@@ -169,6 +170,7 @@ bool Adafruit_BNO08x::_init(int32_t sensor_id) {
   // Open SH2 interface (also registers non-sensor event handler.)
   status = sh2_open(&_HAL, hal_callback, NULL);
   if (status != SH2_OK) {
+    Serial.println("Failed to open SH2 interface");
     return false;
   }
 
@@ -176,6 +178,7 @@ bool Adafruit_BNO08x::_init(int32_t sensor_id) {
   memset(&prodIds, 0, sizeof(prodIds));
   status = sh2_getProdIds(&prodIds);
   if (status != SH2_OK) {
+    Serial.println("Couldn't get prod IDs");
     return false;
   }
 
