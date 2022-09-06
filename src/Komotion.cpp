@@ -200,6 +200,8 @@ void Komotion::begin(char config[5], bool saveBat){
 
     LowPower.attachInterruptWakeup(KOMOTION_SWITCH, lpCallback, FALLING);
 
+    calibrate();
+
     _accCal = 0;
     _gyroCal = 0;
     _magCal = 0;
@@ -209,7 +211,6 @@ void Komotion::begin(char config[5], bool saveBat){
         _pixel.show();
         digitalWrite(LED_BUILTIN, LOW); // indicate end of begin()
     }
-    calibrate();
 }
 
 void Komotion::_bnoDetails(void){
@@ -564,8 +565,26 @@ void Komotion::record(void){
 
 void Komotion::calibrate() {
     while(digitalRead(KOMOTION_SWITCH)) { // keep calibrating until record switch is switched to record
-        if (_bno08x->wasReset()){
+        if (_bno08x->wasReset()) {
             _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
+
+            resetCount++;
+        
+            // v0.2.4: BNO reset more than 5 times, probably as a result of SPI timeouts. Blink purple to indicate to users to reset the device
+            if (resetCount >= 5)
+            {
+                while (true)
+                {
+                    _pixel.clear();
+                    _pixel.setPixelColor(_pixNum,25,0,25);
+                    _pixel.show();
+                    delay(100);  
+                    _pixel.clear();
+                    _pixel.setPixelColor(_pixNum,0,0,0);
+                    _pixel.show();  
+                    delay(1000);
+                }
+            }
         }
         
         if (!_bno08x->getSensorEvent(&_sensorValue)){continue;}
@@ -620,9 +639,14 @@ void Komotion::calibrate() {
                 _pixel.show();
                 delay(100);
             }
+
+            reset_count = 0;
+
             return;
         }
     }
+
+    reset_count = 0;
 }
 
 void lpCallback(void)
