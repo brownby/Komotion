@@ -11,7 +11,7 @@
 
 SdFat _sd;
 SdFile _file;
-Adafruit_BNO08x _bno08x(BNO08X_RESET);
+Adafruit_BNO08x *_bno08x = NULL;
 Adafruit_NeoPixel _pixel(1, KOMOTION_NEOPIX, NEO_GRB + NEO_KHZ800);
 bool lpFlag = false;
 uint8_t resetCount = 0;
@@ -79,7 +79,9 @@ void Komotion::begin(char config[5], bool saveBat){
 
     Serial.print("attempting to setup IMU...");
 
-    if (!_bno08x.begin_SPI(BNO08X_CS, BNO08X_INT)) {
+    _bno08x = new Adafruit_BNO08x(BNO08X_RESET);
+
+    if (!_bno08x->begin_SPI(BNO08X_CS, BNO08X_INT)) {
             Serial.println(" failed to initialize BNO08x");
         while(1) {delay(10);}
     }
@@ -211,17 +213,17 @@ void Komotion::begin(char config[5], bool saveBat){
 }
 
 void Komotion::_bnoDetails(void){
-    for (int n = 0; n < _bno08x.prodIds.numEntries; n++) {
+    for (int n = 0; n < _bno08x->prodIds.numEntries; n++) {
         Serial.print("Part ");
-        Serial.print(_bno08x.prodIds.entry[n].swPartNumber);
+        Serial.print(_bno08x->prodIds.entry[n].swPartNumber);
         Serial.print(": Version :");
-        Serial.print(_bno08x.prodIds.entry[n].swVersionMajor);
+        Serial.print(_bno08x->prodIds.entry[n].swVersionMajor);
         Serial.print(".");
-        Serial.print(_bno08x.prodIds.entry[n].swVersionMinor);
+        Serial.print(_bno08x->prodIds.entry[n].swVersionMinor);
         Serial.print(".");
-        Serial.print(_bno08x.prodIds.entry[n].swVersionPatch);
+        Serial.print(_bno08x->prodIds.entry[n].swVersionPatch);
         Serial.print(" Build ");
-        Serial.println(_bno08x.prodIds.entry[n].swBuildNumber);
+        Serial.println(_bno08x->prodIds.entry[n].swBuildNumber);
     }
 }
 
@@ -230,38 +232,38 @@ void Komotion::_setReports(bool configState[], int configRate[]){
     if (configState[0]){
         calConfig |= SH2_CAL_ACCEL;
         Serial.println("Enabling accelerometer");
-        if (!_bno08x.enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
+        if (!_bno08x->enableReport(SH2_ACCELEROMETER, (int)us/configRate[0])) {
             Serial.println("could not enable accelerometer (!)");
         }
     }
     if (configState[1]){
         calConfig |= SH2_CAL_ACCEL;
         Serial.println("Enabling linear acceleration");
-        if (!_bno08x.enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
+        if (!_bno08x->enableReport(SH2_LINEAR_ACCELERATION, (int)us/configRate[1])) {
             Serial.println("could not enable linear acceleration (!)");
         }
     }
     if (configState[2]){
         calConfig |= SH2_CAL_GYRO;
         Serial.println("Enabling gyroscope");
-        if (!_bno08x.enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
+        if (!_bno08x->enableReport(SH2_GYROSCOPE_CALIBRATED, (int)us/configRate[2])) {
             Serial.println("could not enable gyroscope (!)"); 
         }
     }
     if (configState[3]){
         calConfig |= SH2_CAL_MAG;
         Serial.println("Enabling magnetic field");
-        if (!_bno08x.enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
+        if (!_bno08x->enableReport(SH2_MAGNETIC_FIELD_CALIBRATED, (int)us/configRate[3])) {
             Serial.println("could not enable magnetometer (!)");
         }
     }
     if (configState[4]){
         Serial.println("Enabling rotation vector");
-        if (!_bno08x.enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
+        if (!_bno08x->enableReport(SH2_ROTATION_VECTOR, (int)us/configRate[4])) {
             Serial.println("could not enable rotation vector");
         }
     }
-    _bno08x.getSensorEvent(&_sensorValue); // need this line to avoid a null pointer exception on the next line
+    _bno08x->getSensorEvent(&_sensorValue); // need this line to avoid a null pointer exception on the next line
     if(!sh2_setCalConfig(calConfig)) {Serial.print("succesfully set dynamic cal: "); Serial.println(calConfig);}
 }
 
@@ -289,7 +291,7 @@ void Komotion::record(void){
         delay(1000);
         lpFlag = false;
     }
-    if (_bno08x.wasReset()){
+    if (_bno08x->wasReset()){
         _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
         resetCount++;
         
@@ -378,7 +380,7 @@ void Komotion::record(void){
             _start_time = micros();
         }
         _dataString = "";
-        if (!_bno08x.getSensorEvent(&_sensorValue)){ }
+        if (!_bno08x->getSensorEvent(&_sensorValue)){ }
         else{
           switch (_sensorValue.sensorId) {
             case SH2_ACCELEROMETER:
@@ -522,11 +524,11 @@ void Komotion::record(void){
 
 void Komotion::calibrate() {
     while(digitalRead(KOMOTION_SWITCH)) { // keep calibrating until record switch is switched to record
-        if (_bno08x.wasReset()){
+        if (_bno08x->wasReset()){
             _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
         }
         
-        if (!_bno08x.getSensorEvent(&_sensorValue)){continue;}
+        if (!_bno08x->getSensorEvent(&_sensorValue)){continue;}
         else {
             switch (_sensorValue.sensorId) {
                 case SH2_ACCELEROMETER:
