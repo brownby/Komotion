@@ -295,7 +295,7 @@ void Komotion::record(void){
         delay(200);
 
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
-        delay(1000);
+        delay(200);
 
         if (_bno08x) 
         {
