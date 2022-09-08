@@ -297,6 +297,8 @@ void Komotion::record(void){
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(200);
 
+        // 0.2.5: Adding this check here because sometimes record switch bouncing causes thid if statement to be entered early
+        // Not really a problem so long as the BNO is successfully re-initialized, which requires deleting the old pointer and closing the SH2 interface
         if (_bno08x) 
         {
             sh2_close();
