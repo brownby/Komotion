@@ -1,9 +1,7 @@
 /*
    Komotion.h - Library for Komotion Sensing Platform
-   Created by J. Evan Smith and Bejamin Y. Brown
+   Created by J. Evan Smith and Benjamin Y. Brown
    Active Learning Labs
-
-   last revised 28 April 2022
 */
 
 #ifndef KOMOTION_h
@@ -42,7 +40,6 @@ class Komotion
     private:
         void _bnoDetails(void);
         void _setReports(bool configState[], int configRate[]);
-        bool _readRecordSwitch();
         bool _saveBat;
         bool _recording;
         bool _dimenStates[31][5];
@@ -62,9 +59,6 @@ class Komotion
         int _accCal;
         int _gyroCal;
         int _magCal;
-        unsigned long _lastDbTime = 0;
-        unsigned long _dBDelay = 50;
-        bool _switchState;
 };
 
 void lpCallback(void);
