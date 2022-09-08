@@ -47,6 +47,9 @@ void Komotion::begin(char config[5], bool saveBat){
     pinMode(KOMOTION_SWITCH, INPUT_PULLUP);
     pinMode(KOMOTION_SD_CD, INPUT_PULLUP);
 
+    // Initialize switch state for debouncing
+    _switchState = digitalRead(KOMOTION_SWITCH);
+
     if (!_saveBat){
         pinMode(KOMOTION_NEOPIX, OUTPUT);
         _pixNum = 0;
@@ -57,7 +60,7 @@ void Komotion::begin(char config[5], bool saveBat){
     }
 
     Serial.begin(115200);
-    // while(!Serial){delay(10);}
+    while(!Serial){delay(10);}
 
     Serial.print("attempting to setup SD card...");
 
@@ -271,8 +274,8 @@ void Komotion::_setReports(bool configState[], int configRate[]){
 void Komotion::record(void){
     if(lpFlag) {
 
-        // Serial.begin(115200);
-        // while(!Serial){delay(10);}
+        Serial.begin(115200);
+        while(!Serial){delay(10);}
 
         // 0.2.2: Removing these pin toggles until empty file bug is resolved
 
@@ -299,9 +302,17 @@ void Komotion::record(void){
         digitalWrite(BNO08X_ONOFF, LOW); // turn on BNO
         delay(1000);
 
+        if (_bno08x) 
+        {
+            sh2_close();
+            delete _bno08x;
+            _bno08x = NULL;
+        }
+
         _bno08x = new Adafruit_BNO08x(BNO08X_RESET);
 
         if (!_bno08x->begin_SPI(BNO08X_CS, BNO08X_INT)) {
+            Serial.println("here");
             Serial.println(" failed to initialize BNO08x");
             while(1) {delay(10);}
         }
@@ -328,7 +339,7 @@ void Komotion::record(void){
             }
         }
     }
-    if(!digitalRead(KOMOTION_SWITCH)){
+    if(!_readRecordSwitch()){
         if(!_recording){
             _recording = !_recording;
 
@@ -341,7 +352,7 @@ void Komotion::record(void){
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
                 delay(1000);
-                if(digitalRead(KOMOTION_SWITCH)){
+                if(_readRecordSwitch()){
                     _recording = !_recording;
                     return;
                 }
@@ -539,6 +550,7 @@ void Komotion::record(void){
 
         sh2_close();
         delete _bno08x;
+        _bno08x = NULL;
 
         // Pull all BNO pins low via OUTPUT 
         pinMode(23, OUTPUT); // MOSI
@@ -555,7 +567,7 @@ void Komotion::record(void){
         digitalWrite(24, LOW);
         digitalWrite(A4, LOW);
         
-        // Serial.end();
+        Serial.end();
 
         resetCount = 0;
 
@@ -564,7 +576,7 @@ void Komotion::record(void){
 }
 
 void Komotion::calibrate() {
-    while(digitalRead(KOMOTION_SWITCH)) { // keep calibrating until record switch is switched to record
+    while(_readRecordSwitch()) { // keep calibrating until record switch is switched to record
         if (_bno08x->wasReset()) {
             _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
 
@@ -647,6 +659,18 @@ void Komotion::calibrate() {
     }
 
     resetCount = 0;
+}
+
+bool Komotion::_readRecordSwitch() {
+    bool curRead = digitalRead(KOMOTION_SWITCH);
+
+    if ((millis() - _lastDbTime > _dBDelay) && curRead != _switchState)
+    {
+        _switchState = curRead;
+        _lastDbTime = millis();
+    }
+    
+    return _switchState;
 }
 
 void lpCallback(void)

@@ -42,6 +42,7 @@ class Komotion
     private:
         void _bnoDetails(void);
         void _setReports(bool configState[], int configRate[]);
+        bool _readRecordSwitch();
         bool _saveBat;
         bool _recording;
         bool _dimenStates[31][5];
@@ -61,6 +62,9 @@ class Komotion
         int _accCal;
         int _gyroCal;
         int _magCal;
+        unsigned long _lastDbTime = 0;
+        unsigned long _dBDelay = 50;
+        bool _switchState;
 };
 
 void lpCallback(void);
