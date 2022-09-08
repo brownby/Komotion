@@ -339,7 +339,8 @@ void Komotion::record(void){
             }
         }
     }
-    if(!_readRecordSwitch()){
+    // if(!_readRecordSwitch()){
+    if(!digitalRead(KOMOTION_SWITCH)) {
         if(!_recording){
             _recording = !_recording;
 
@@ -352,7 +353,8 @@ void Komotion::record(void){
                 _pixel.setPixelColor(_pixNum,0,0,0);
                 _pixel.show();  
                 delay(1000);
-                if(_readRecordSwitch()){
+                // if(_readRecordSwitch()){
+                if (digitalRead(KOMOTION_SWITCH)) {
                     _recording = !_recording;
                     return;
                 }
@@ -576,7 +578,8 @@ void Komotion::record(void){
 }
 
 void Komotion::calibrate() {
-    while(_readRecordSwitch()) { // keep calibrating until record switch is switched to record
+    // while(_readRecordSwitch()) { // keep calibrating until record switch is switched to record
+    while(digitalRead(KOMOTION_SWITCH)) {
         if (_bno08x->wasReset()) {
             _setReports(_dimenStates[_setConfig], _dimenRates[_setConfig]);
 
